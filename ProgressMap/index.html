@@ -1,32 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GVA Progress Map – PWA</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 2rem;
-    }
-    h1 {
-      margin-bottom: 2rem;
-    }
-    a {
-      display: inline-block;
-      margin: 1rem;
-      padding: 1rem 2rem;
-      background: #4CAF50;
-      color: white;
-      text-decoration: none;
-      border-radius: 10px;
-    }
-  </style>
-</head>
-<body>
-  <h1>📦 GVA Toybox (Mobile Test)</h1>
-  <a href="/GVA-toybox-mobile-PWA/Toybox-test%20-%20Copy/index.html">🧪 Launch Toybox Test</a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>GVA Toybox – PWA Launcher</title>
+    <link rel="manifest" href="../manifest.json" />
+    <link rel="icon" href="../icon.png" />
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+        background: #000;
+        color: #fff;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        overflow: hidden;
+      }
 
-</body>
+      h1 {
+        font-size: 1.8em;
+        margin-bottom: 0.5em;
+      }
+
+      #install-btn {
+        padding: 15px 25px;
+        font-size: 1.2em;
+        background: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        display: none;
+        margin-top: 20px;
+      }
+
+      #fallback {
+        margin-top: 30px;
+        font-size: 0.9em;
+        color: #aaa;
+      }
+
+      #play-btn {
+        margin-top: 40px;
+        background: #2196f3;
+        padding: 12px 20px;
+        font-size: 1em;
+        border: none;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>📦 GVA Toybox (Mobile Test)</h1>
+    <button id="install-btn">📲 Install GVA Toybox</button>
+
+    <button id="play-btn">🧪 Launch Toybox Test</button>
+
+    <div id="fallback">
+      If the install button doesn't appear,<br />
+      use your browser’s menu → “Add to Home screen”
+    </div>
+
+    <script>
+      let deferredPrompt;
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('install-btn').style.display = 'inline-block';
+      });
+
+      document.getElementById('install-btn').addEventListener('click', () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('✅ User accepted A2HS prompt');
+            } else {
+              console.log('❌ User dismissed A2HS prompt');
+            }
+            deferredPrompt = null;
+            document.getElementById('install-btn').style.display = 'none';
+          });
+        }
+      });
+
+      document.getElementById('play-btn').addEventListener('click', () => {
+        window.location.href = '../Toybox-test%20-%20Copy/index.html';
+      });
+    </script>
+  </body>
 </html>
