@@ -1,110 +1,103 @@
-window.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   playerState.load();
-  document.getElementById("xp-value").textContent = playerState.getXP();
-});
+  document.getElementById('xp-value').textContent = playerState.getXP();
 
-let dragged = null;
-let placedItems = [];
-const correctItems = ['seed', 'water-can', 'sun'];
+  const draggables = document.querySelectorAll('.draggable');
+  const slots = document.querySelectorAll('.cell');
+  const correctItems = ['seed', 'water-can', 'sun'];
+  let droppedItems = [];
 
-document.querySelectorAll('.draggable').forEach(el => {
-  el.addEventListener('dragstart', e => {
-    dragged = e.target;
-    setTimeout(() => (e.target.style.visibility = 'hidden'), 0);
+  let activeClone = null;
+  let activeOriginal = null;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  draggables.forEach(el => {
+    el.addEventListener('touchstart', (event) => {
+      activeOriginal = el;
+      const rect = el.getBoundingClientRect();
+      offsetX = event.touches[0].clientX - rect.left;
+      offsetY = event.touches[0].clientY - rect.top;
+
+      activeClone = el.cloneNode(true);
+      activeClone.classList.add('clone');
+      document.body.appendChild(activeClone);
+      moveClone(event.touches[0].clientX, event.touches[0].clientY);
+    });
+
+    el.addEventListener('touchmove', (event) => {
+      if (!activeClone) return;
+      event.preventDefault();
+      moveClone(event.touches[0].clientX, event.touches[0].clientY);
+    }, { passive: false });
+
+    el.addEventListener('touchend', () => {
+      if (!activeClone || !activeOriginal) return;
+
+      const cloneRect = activeClone.getBoundingClientRect();
+      slots.forEach(slot => {
+        const rect = slot.getBoundingClientRect();
+        const centerX = cloneRect.left + cloneRect.width / 2;
+        const centerY = cloneRect.top + cloneRect.height / 2;
+
+        const isInside = centerX >= rect.left && centerX <= rect.right &&
+                         centerY >= rect.top && centerY <= rect.bottom;
+
+        if (isInside && slot.children.length === 0) {
+          const id = activeOriginal.dataset.id;
+          if (!droppedItems.includes(id)) {
+            droppedItems.push(id);
+            const placed = activeOriginal.cloneNode(true);
+            placed.classList.remove('draggable');
+            slot.appendChild(placed);
+          }
+        }
+      });
+
+      document.body.removeChild(activeClone);
+      activeClone = null;
+      activeOriginal = null;
+
+      if (droppedItems.length === 3) checkResult();
+    });
   });
 
-  el.addEventListener('dragend', e => {
-    e.target.style.visibility = 'visible';
-  });
-});
-
-document.querySelectorAll('.grow-slot').forEach(slot => {
-  slot.addEventListener('dragover', e => {
-    e.preventDefault();
-  });
-
-  slot.addEventListener('drop', e => {
-    e.preventDefault();
-    if (!dragged || slot.children.length > 0) return;
-
-    dragged.style.position = 'relative';
-    dragged.style.left = '0px';
-    dragged.style.top = '0px';
-    dragged.style.margin = 'auto';
-    dragged.style.width = '54px';
-    dragged.setAttribute('draggable', 'false');
-
-    slot.appendChild(dragged);
-    placedItems.push(dragged.id);
-    dragged = null;
-
-    if (placedItems.length === 3) checkGrowResult();
-  });
-});
-
-function checkGrowResult() {
-  const gameArea = document.getElementById('game-area');
-  const xpEl = document.getElementById('xp-value');
-
-  const isValid = correctItems.every(item => placedItems.includes(item));
-
-  if (isValid) {
-    gameArea.classList.add('complete');
-    gameArea.style.borderColor = '#28a745';
-
-    if (!playerState.isCompleted("2")) {
-      let xp = playerState.getXP() + 5;
-      playerState.setXP(xp);
-      playerState.markCompleted("2");
-      xpEl.textContent = xp;
-      xpEl.classList.add('xp-flash');
-      setTimeout(() => xpEl.classList.remove('xp-flash'), 500);
-    }
-
-    document.getElementById('completion-buttons').style.display = 'block';
-
-    setTimeout(() => {
-      alert('✅ Crops successfully planted!');
-      gameArea.classList.remove('complete');
-      gameArea.style.borderColor = '#555';
-    }, 1000);
-  } else {
-    gameArea.style.borderColor = '#b00020';
-    setTimeout(() => {
-      alert('❌ Something’s not right in the soil... Try again.');
-      gameArea.style.borderColor = '#555';
-      resetGrowArea();
-    }, 1000);
+  function moveClone(x, y) {
+    activeClone.style.left = (x - offsetX) + 'px';
+    activeClone.style.top = (y - offsetY) + 'px';
   }
-}
 
-function resetGrowArea() {
-  placedItems = [];
-  document.querySelectorAll('.grow-slot').forEach(slot => {
-    const item = slot.querySelector('img');
-    if (item) {
-      item.setAttribute('draggable', 'true');
-      item.style.position = 'static';
-      item.style.margin = '10px';
-      document.getElementById('toolbox').appendChild(item);
+  function checkResult() {
+    const isCorrect = correctItems.every(item => droppedItems.includes(item));
+    if (isCorrect) {
+      awardXP();
+      document.getElementById('result-box').style.display = 'block';
+    } else {
+      alert('❌ Something’s not right in the soil... Try again.');
+      reset();
     }
+  }
+
+  function reset() {
+    droppedItems = [];
+    slots.forEach(slot => {
+      while (slot.firstChild) {
+        slot.removeChild(slot.firstChild);
+      }
+    });
+  }
+
+  function awardXP() {
+    if (!playerState.isCompleted("2")) {
+      let xp = playerState.getXP();
+      playerState.setXP(xp + 5);
+      playerState.markCompleted("2");
+      playerState.save();
+      document.getElementById('xp-value').textContent = playerState.getXP();
+    }
+  }
+
+  document.getElementById('btn-continue').addEventListener('click', () => {
+    window.location.href = "../Toybox-3/index.html";
   });
-}
-
-document.getElementById('btn-continue').addEventListener('click', () => {
-  window.location.href = '../Toybox-3/index.html';
 });
-
-document.getElementById('btn-exit').addEventListener('click', () => {
-  console.log('Exit Toybox 2');
-});
-
-function goToMap() {
-  window.location.href = "../ProgressMap/index.html";
-}
-
-function saveAndExit() {
-  playerState.save();
-  window.location.href = "../ExitScreen/index.html";
-}
-
