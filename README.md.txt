@@ -1,3 +1,157 @@
+---
+
+## 🚀 GVA Toybox – Mobile PWA Build (`Toybox-test-PWA`)
+
+### ✅ Status: Installable PWA (Standalone Mode Active)
+
+This version of the GVA Toybox has full **Progressive Web App capabilities**. It supports app-like installation directly from a browser (no App Store or Play Store required).
+
+---
+
+## 📱 PWA Features Enabled
+
+- ✅ `manifest.json` with name, icon, theme, and display mode
+- ✅ `service-worker.js` registered at root
+- ✅ `display: standalone` for fullscreen, chrome-free launch
+- ✅ `100dvh` layout with `--vh` fallback for mobile UI precision
+- ✅ Touch-first interface with clone-based drag
+- ✅ Scroll + zoom completely locked
+
+---
+
+## 📂 Files in This Build
+
+| File                | Purpose                                   |
+|---------------------|--------------------------------------------|
+| `index.html`        | Game layout and service worker registration |
+| `style.css`         | Full portrait styling and layout locking    |
+| `game.js`           | Drag logic and success flow                 |
+| `manifest.json`     | Metadata to allow install                   |
+| `service-worker.js` | Minimal install-enabler service worker      |
+| `icon.png`          | Install icon (512×512 or scalable SVG)      |
+
+---
+
+## 🧪 Install Test Checklist (All Devices)
+
+### 🔍 General
+- [ ] Visit site via browser (Chrome recommended)
+- [ ] Ensure manifest loads in DevTools → Application → Manifest
+- [ ] Confirm "display: standalone" is recognized
+- [ ] See install prompt (or tap ⋮ → Add to Home screen)
+
+### ✅ After Installation (From Homescreen)
+- [ ] App opens **fullscreen** (no browser bar)
+- [ ] Screen is **fixed** (no vertical or horizontal scroll)
+- [ ] Drag-and-drop works exactly like native app
+- [ ] Works identically in portrait on:
+  - [ ] ✅ Samsung S6
+  - [ ] ✅ Samsung S10
+  - [ ] ✅ Pixel / Android emulator
+  - [ ] ✅ Modern iPhone Safari (add-to-home-screen)
+
+### ⚠️ Optional Advanced Checks
+- [ ] App works offline (if offline cache added)
+- [ ] Manifest updates pull on app relaunch
+- [ ] User sees no zoom or scale UI allowed
+
+---
+
+## 💡 Next Up
+
+| Phase             | Description                                      |
+|------------------|--------------------------------------------------|
+| Offline Support   | Add caching layer to `service-worker.js`         |
+| Landscape Mode    | Build separate CSS + layout for landscape toggle |
+| Desktop View      | Integrate install fallback for desktop Chrome    |
+| XP System         | Hook drag placements to XP logic + playerState   |
+
+---
+
+## 📍 Deployment
+
+This version is hosted on GitHub Pages and installable via browser.
+
+> Push to:
+> `https://m420-glitch.github.io/GVA-toybox-mobile-tests/`  
+> (or your active repo branch)
+
+---
+
+Let me know if you want a **print-friendly testing checklist**, QR-code launcher sheet, or an **offline-enabled service worker** next. You're running a pro-grade mobile experience now. 📲✅
+
+
+
+# 📦 GVA Toybox – Mobile Portrait Build (v1.0)
+
+### ✅ Status: PWA-Ready (Manifest Only)
+
+This folder represents the **final pre-PWA build** of the GVA mobile toybox experience, with working fullscreen portrait layout, draggable interactions, and install scaffolding in place.
+
+---
+
+## 🧱 Features Implemented
+
+- 6×6 grid (54px per cell) for placing items
+- 12 draggable blocks (also 54px) from a toolbox
+- Clone-based touch dragging (mobile-friendly)
+- Works on Samsung S6, S10, and modern devices
+- CSS: 100dvh with dynamic `--vh` variable fallback
+- Locked zoom/scroll behavior
+- Manual z-index layering for drag visibility
+- `manifest.json` created for PWA testing
+
+---
+
+## 📂 Project Contents
+
+| File               | Purpose                              |
+|--------------------|--------------------------------------|
+| `index.html`       | Main HTML layout                     |
+| `style.css`        | Grid, drag styling, and layout fixes |
+| `game.js`          | Drag-and-drop + result logic         |
+| `manifest.json`    | PWA metadata (display: standalone)   |
+
+---
+
+## 🚧 Not Yet Added
+
+| Missing             | Notes                               |
+|---------------------|-------------------------------------|
+| `service-worker.js` | Needed to activate true PWA mode    |
+| PWA Install Prompt  | Will only appear once service worker is active |
+| Offline support     | Optional for future versions        |
+
+---
+
+## ✨ What's Next
+
+We will now:
+1. Make a new folder: `Toybox-test-PWA`
+2. Copy all files from this folder
+3. Add the `service-worker.js`
+4. Register it inside the new `index.html`
+5. Push to GitHub Pages and test real installation
+
+---
+
+## 📍 Bookmark
+
+This folder is the last stable build **before enabling PWA installation**.
+You can return here for rollback or reference.
+
+
+
+
+
+
+
+
+
+
+THE TEMPLATES WILL TIE INTO THIS THINKING:
+
+
 # GVA Toybox Refactor – README
 
 ## Purpose:
