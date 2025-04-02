@@ -63,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
       activeOriginal = null;
 
       if (droppedItems.length === 12) {
-        // ✅ Award XP + complete logic
         if (!playerState.isCompleted("1")) {
           let xp = playerState.getXP();
           playerState.setXP(xp + 5);
@@ -71,8 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
           playerState.save();
         }
 
-        resultBox.style.display = 'block';
         document.getElementById('xp-value').textContent = playerState.getXP();
+        resultBox.style.display = 'block';
       }
     });
   });
