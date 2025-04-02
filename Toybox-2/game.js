@@ -1,88 +1,75 @@
-document.addEventListener('DOMContentLoaded', () => {
-  playerState.load();
-  document.getElementById('xp-value').textContent = playerState.getXP();
+let xp = 0;
+const xpCount = document.getElementById('xp-count');
+const continueBtn = document.getElementById('continue-btn');
+const draggables = document.querySelectorAll('.draggable');
+const slots = document.querySelectorAll('.slot');
 
-  const correctItems = ['seed', 'water-can', 'sun'];
-  const draggables = document.querySelectorAll('.draggable');
-  const cells = document.querySelectorAll('.cell');
-  const resultBox = document.getElementById('result-box');
-  const continueBtn = document.getElementById('btn-continue');
-
-  let activeClone = null;
-  let activeOriginal = null;
-  let offsetX = 0;
-  let offsetY = 0;
-  let placedItems = [];
-
-  draggables.forEach(el => {
-    el.addEventListener('touchstart', (event) => {
-      activeOriginal = el;
-      const rect = el.getBoundingClientRect();
-      offsetX = event.touches[0].clientX - rect.left;
-      offsetY = event.touches[0].clientY - rect.top;
-
-      activeClone = el.cloneNode(true);
-      activeClone.classList.add('clone');
-      document.body.appendChild(activeClone);
-      moveClone(event.touches[0].clientX, event.touches[0].clientY);
-    });
-
-    el.addEventListener('touchmove', (event) => {
-      if (!activeClone) return;
-      event.preventDefault();
-      moveClone(event.touches[0].clientX, event.touches[0].clientY);
-    }, { passive: false });
-
-    el.addEventListener('touchend', () => {
-      if (!activeClone || !activeOriginal) return;
-
-      const cloneRect = activeClone.getBoundingClientRect();
-      cells.forEach(cell => {
-        const cellRect = cell.getBoundingClientRect();
-        const centerX = cloneRect.left + cloneRect.width / 2;
-        const centerY = cloneRect.top + cloneRect.height / 2;
-
-        const isInside =
-          centerX >= cellRect.left &&
-          centerX <= cellRect.right &&
-          centerY >= cellRect.top &&
-          centerY <= cellRect.bottom;
-
-        if (isInside && cell.children.length === 0) {
-          const id = activeOriginal.dataset.id;
-          placedItems.push(id);
-
-          const placed = activeOriginal.cloneNode(true);
-          placed.classList.remove('draggable');
-          cell.appendChild(placed);
-        }
-      });
-
-      document.body.removeChild(activeClone);
-      activeClone = null;
-      activeOriginal = null;
-
-      if (placedItems.length === 3) {
-        const isValid = correctItems.every(item => placedItems.includes(item));
-        if (isValid && !playerState.isCompleted("2")) {
-          let xp = playerState.getXP();
-          playerState.setXP(xp + 5);
-          playerState.markCompleted("2");
-          playerState.save();
-        }
-
-        document.getElementById('xp-value').textContent = playerState.getXP();
-        resultBox.style.display = 'block';
-      }
-    });
-  });
-
-  function moveClone(x, y) {
-    activeClone.style.left = (x - offsetX) + 'px';
-    activeClone.style.top = (y - offsetY) + 'px';
-  }
-
-  continueBtn.addEventListener('click', () => {
-    window.location.href = "../Toybox-3/index.html";
-  });
+draggables.forEach(elem => {
+  elem.addEventListener('dragstart', dragStart);
+  elem.addEventListener('touchstart', dragStartTouch, { passive: false });
 });
+
+slots.forEach(slot => {
+  slot.addEventListener('dragover', dragOver);
+  slot.addEventListener('drop', drop);
+  slot.addEventListener('touchmove', touchMove);
+  slot.addEventListener('touchend', touchDrop);
+});
+
+function dragStart(e) {
+  e.dataTransfer.setData('text/plain', e.target.dataset.id);
+}
+
+function dragOver(e) {
+  e.preventDefault();
+}
+
+function drop(e) {
+  e.preventDefault();
+  const draggedId = e.dataTransfer.getData('text/plain');
+  checkMatch(draggedId, e.target);
+}
+
+function dragStartTouch(e) {
+  e.preventDefault();
+  const touch = e.touches[0];
+  const img = e.target;
+  img.classList.add('dragging');
+  img.startX = touch.clientX;
+  img.startY = touch.clientY;
+}
+
+function touchMove(e) {
+  e.preventDefault();
+}
+
+function touchDrop(e) {
+  const touch = e.changedTouches[0];
+  const dragged = document.querySelector('.dragging');
+  if (!dragged) return;
+  dragged.classList.remove('dragging');
+
+  const elemAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
+  if (elemAtPoint && elemAtPoint.classList.contains('slot')) {
+    const draggedId = dragged.dataset.id;
+    checkMatch(draggedId, elemAtPoint);
+  }
+}
+
+function checkMatch(draggedId, slot) {
+  if (slot.dataset.match === draggedId && slot.children.length === 0) {
+    const dragged = document.querySelector(`.draggable[data-id="${draggedId}"]`);
+    slot.appendChild(dragged);
+    dragged.style.pointerEvents = "none";
+    xp += 5;
+    xpCount.textContent = xp;
+    checkCompletion();
+  }
+}
+
+function checkCompletion() {
+  const allMatched = [...slots].every(slot => slot.children.length > 0);
+  if (allMatched) {
+    continueBtn.style.display = 'block';
+  }
+}

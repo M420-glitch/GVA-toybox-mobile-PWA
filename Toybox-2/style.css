@@ -1,99 +1,95 @@
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-html, body {
-  overflow: hidden;
-  width: 100vw;
-  height: 100dvh;
-  background-color: #fff;
+body {
   font-family: sans-serif;
-  touch-action: none;
-  overscroll-behavior: none;
-}
-
-#xp-bar {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  font-size: 16px;
-  background: #000;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 10px;
-  z-index: 1000;
-}
-
-#game-container {
-  width: 100%;
-  height: 100%;
+  background: #f5f5dc;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding-top: 40px;
+  padding: 10px;
+  height: 100dvh;
+  overflow: hidden;
 }
 
-#grid-board {
-  width: 300px;
-  height: 100px;
-  display: grid;
-  grid-template-columns: repeat(3, 100px);
-  grid-template-rows: 100px;
+#toybox-wrapper {
+  width: 100%;
+  max-width: 420px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#xp-box {
+  font-weight: bold;
+  background: #eee;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+h1 {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+#game-area {
+  width: 100%;
+  height: 280px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
+  background: #ddd;
+  padding: 10px;
+  border-radius: 10px;
   margin-bottom: 20px;
 }
 
-.cell {
-  width: 100px;
-  height: 100px;
-  background-color: #eee;
-  border: 2px dashed #999;
-  border-radius: 8px;
-  position: relative;
+.slot {
+  width: 54px;
+  height: 54px;
+  border: 2px dashed #888;
+  border-radius: 6px;
+  background: white;
 }
 
 #toolbox {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
-  max-width: 320px;
-  padding: 10px;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 0;
 }
 
-#toolbox img {
-  width: 80px;
-  height: 80px;
-  border-radius: 10px;
-  background: #4CAF50;
-  cursor: grab;
+.toolbox img,
+.draggable {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  border: 2px solid #333;
+  border-radius: 6px;
+  background: #fff;
+  touch-action: none;
 }
 
-.clone {
-  position: fixed;
-  width: 80px;
-  height: 80px;
-  z-index: 9999;
-  pointer-events: none;
-  border-radius: 10px;
-}
-
-#result-box {
-  text-align: center;
+#continue-btn {
   margin-top: 20px;
-}
-
-#btn-continue {
-  margin-top: 10px;
   padding: 10px 20px;
-  background: #4caf50;
+  font-weight: bold;
+  font-size: 1rem;
+  background: green;
   color: white;
   border: none;
   border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
-

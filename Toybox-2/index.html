@@ -2,36 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Toybox 2 – Ground Test</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="manifest" href="../manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Ground Toybox</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="xp-bar">XP: <span id="xp-value">--</span></div>
+  <div id="toybox-wrapper">
+    <header>
+      <div id="xp-box">XP: <span id="xp-count">0</span></div>
+      <h1>GROUND TOYBOX</h1>
+    </header>
 
-  <div id="game-container">
-    <div id="grid-board">
-      <div class="cell" data-index="0"></div>
-      <div class="cell" data-index="1"></div>
-      <div class="cell" data-index="2"></div>
-    </div>
+    <main id="game-area">
+      <div class="slot" data-match="1"></div>
+      <div class="slot" data-match="2"></div>
+      <div class="slot" data-match="3"></div>
+    </main>
 
     <div id="toolbox">
-      <img src="assets/grow/seed.png" class="draggable" data-id="seed" />
-      <img src="assets/grow/water-can.png" class="draggable" data-id="water-can" />
-      <img src="assets/grow/sun.png" class="draggable" data-id="sun" />
-      <img src="assets/grow/cola.png" class="draggable" data-id="cola" />
-      <img src="assets/grow/flatscreen.png" class="draggable" data-id="flatscreen" />
+      <img src="assets/item1.png" class="draggable" draggable="true" data-id="1" />
+      <img src="assets/item2.png" class="draggable" draggable="true" data-id="2" />
+      <img src="assets/item3.png" class="draggable" draggable="true" data-id="3" />
     </div>
 
-    <div id="result-box" style="display:none;">
-      <h2 id="result-text">✅ Crops Planted!</h2>
-      <button id="btn-continue">Continue to Toybox 3</button>
-    </div>
+    <button id="continue-btn" style="display:none;">Continue</button>
   </div>
 
-  <script src="../playerState.js"></script>
-  <script src="game.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
