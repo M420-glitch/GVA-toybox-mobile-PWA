@@ -4,14 +4,13 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 let dragged = null;
-let taskComplete = false;
-const correctItems = ['seed', 'water-can', 'sun'];
 let placedItems = [];
+const correctItems = ['seed', 'water-can', 'sun'];
 
 document.querySelectorAll('.draggable').forEach(el => {
   el.addEventListener('dragstart', e => {
     dragged = e.target;
-    setTimeout(() => { e.target.style.visibility = 'hidden'; }, 0);
+    setTimeout(() => (e.target.style.visibility = 'hidden'), 0);
   });
 
   el.addEventListener('dragend', e => {
@@ -20,7 +19,9 @@ document.querySelectorAll('.draggable').forEach(el => {
 });
 
 document.querySelectorAll('.grow-slot').forEach(slot => {
-  slot.addEventListener('dragover', e => e.preventDefault());
+  slot.addEventListener('dragover', e => {
+    e.preventDefault();
+  });
 
   slot.addEventListener('drop', e => {
     e.preventDefault();
@@ -29,35 +30,33 @@ document.querySelectorAll('.grow-slot').forEach(slot => {
     dragged.style.position = 'relative';
     dragged.style.left = '0px';
     dragged.style.top = '0px';
+    dragged.style.margin = 'auto';
     dragged.style.width = '54px';
-    dragged.style.height = '54px';
     dragged.setAttribute('draggable', 'false');
 
     slot.appendChild(dragged);
     placedItems.push(dragged.id);
+    dragged = null;
 
     if (placedItems.length === 3) checkGrowResult();
-    dragged = null;
   });
 });
 
 function checkGrowResult() {
-  const gameAreaEl = document.getElementById('game-area');
+  const gameArea = document.getElementById('game-area');
   const xpEl = document.getElementById('xp-value');
 
   const isValid = correctItems.every(item => placedItems.includes(item));
 
   if (isValid) {
-    gameAreaEl.classList.add('complete');
-    gameAreaEl.style.borderColor = '#28a745';
+    gameArea.classList.add('complete');
+    gameArea.style.borderColor = '#28a745';
 
     if (!playerState.isCompleted("2")) {
-      let currentXP = playerState.getXP();
-      currentXP += 5;
-      playerState.setXP(currentXP);
+      let xp = playerState.getXP() + 5;
+      playerState.setXP(xp);
       playerState.markCompleted("2");
-      xpEl.textContent = currentXP;
-
+      xpEl.textContent = xp;
       xpEl.classList.add('xp-flash');
       setTimeout(() => xpEl.classList.remove('xp-flash'), 500);
     }
@@ -66,28 +65,30 @@ function checkGrowResult() {
 
     setTimeout(() => {
       alert('✅ Crops successfully planted!');
-      gameAreaEl.classList.remove('complete');
-      gameAreaEl.style.borderColor = '#555';
+      gameArea.classList.remove('complete');
+      gameArea.style.borderColor = '#555';
     }, 1000);
   } else {
-    gameAreaEl.style.borderColor = '#b00020';
-
+    gameArea.style.borderColor = '#b00020';
     setTimeout(() => {
       alert('❌ Something’s not right in the soil... Try again.');
-      gameAreaEl.style.borderColor = '#555';
-
-      // Reset logic
-      placedItems = [];
-      document.querySelectorAll('.grow-slot').forEach(slot => {
-        const item = slot.querySelector('img');
-        if (item) {
-          document.getElementById('toolbox').appendChild(item);
-          item.setAttribute('draggable', 'true');
-          item.style.position = 'static';
-        }
-      });
+      gameArea.style.borderColor = '#555';
+      resetGrowArea();
     }, 1000);
   }
+}
+
+function resetGrowArea() {
+  placedItems = [];
+  document.querySelectorAll('.grow-slot').forEach(slot => {
+    const item = slot.querySelector('img');
+    if (item) {
+      item.setAttribute('draggable', 'true');
+      item.style.position = 'static';
+      item.style.margin = '10px';
+      document.getElementById('toolbox').appendChild(item);
+    }
+  });
 }
 
 document.getElementById('btn-continue').addEventListener('click', () => {
@@ -95,7 +96,7 @@ document.getElementById('btn-continue').addEventListener('click', () => {
 });
 
 document.getElementById('btn-exit').addEventListener('click', () => {
-  console.log('Exit Toybox');
+  console.log('Exit Toybox 2');
 });
 
 function goToMap() {
@@ -106,3 +107,4 @@ function saveAndExit() {
   playerState.save();
   window.location.href = "../ExitScreen/index.html";
 }
+
