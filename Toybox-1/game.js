@@ -1,8 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+  playerState.load();
+  document.getElementById('xp-value').textContent = playerState.getXP();
+
   const draggables = document.querySelectorAll('.draggable');
   const cells = document.querySelectorAll('.cell');
   const resultBox = document.getElementById('result-box');
-  const tryAgainBtn = document.getElementById('try-again');
+  const continueBtn = document.getElementById('btn-continue');
 
   let activeClone = null;
   let activeOriginal = null;
@@ -60,51 +63,26 @@ document.addEventListener('DOMContentLoaded', () => {
       activeOriginal = null;
 
       if (droppedItems.length === 12) {
+        // ✅ Award XP + complete logic
+        if (!playerState.isCompleted("1")) {
+          let xp = playerState.getXP();
+          playerState.setXP(xp + 5);
+          playerState.markCompleted("1");
+          playerState.save();
+        }
+
         resultBox.style.display = 'block';
+        document.getElementById('xp-value').textContent = playerState.getXP();
       }
     });
+  });
+
+  continueBtn.addEventListener('click', () => {
+    window.location.href = "../Toybox-2/index.html";
   });
 
   function moveClone(x, y) {
     activeClone.style.left = (x - offsetX) + 'px';
     activeClone.style.top = (y - offsetY) + 'px';
   }
-
-  tryAgainBtn.addEventListener('click', () => {
-    cells.forEach(cell => cell.innerHTML = '');
-    droppedItems = [];
-    resultBox.style.display = 'none';
-    // Mark as completed and award XP (adjust XP as needed)
-playerState.setCompleted('1'); // '1', '2', etc.
-playerState.setXP(playerState.getXP() + 5);
-playerState.save();
-window.addEventListener("DOMContentLoaded", () => {
-  playerState.load();
-  document.getElementById("xp-value").textContent = playerState.getXP();
-});
-
-// Simulate "task complete" (you can trigger this however your toybox 1 ends)
-function markToybox1Complete() {
-  if (!playerState.isCompleted("1")) {
-    const xp = playerState.getXP() + 5;
-    playerState.setXP(xp);
-    playerState.markCompleted("1");
-    playerState.save();
-    document.getElementById("xp-value").textContent = xp;
-  }
-
-  document.getElementById("completion-buttons").style.display = "flex";
-}
-
-// Example trigger — call `markToybox1Complete()` when your Toybox-1 success event fires
-
-function goToNext() {
-  window.location.href = "../Toybox-2/index.html";
-}
-
-function goToMap() {
-  window.location.href = "../ProgressMap/index.html";
-}
-
-  });
 });
