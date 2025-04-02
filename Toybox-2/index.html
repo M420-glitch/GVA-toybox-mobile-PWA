@@ -3,42 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>🌱 Ground Toybox (Mobile)</title>
-  <link rel="manifest" href="../manifest.json" />
-  <link rel="icon" href="../icon.png" />
+  <title>Toybox 2 – Ground Test</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="../manifest.json">
 </head>
 <body>
-  <div id="top-controls">
-    <button onclick="goToMap()">🗺️ Map</button>
-    <button onclick="saveAndExit()">💾 Exit</button>
-  </div>
-
-  <h1>🌱 Ground Toybox</h1>
-  <p>Pick 3 essentials. Not everything belongs in the soil.</p>
-
-  <div id="game-area">
-    <div id="dropzone">
-      <div class="slot"></div>
-      <div class="slot"></div>
-      <div class="slot"></div>
-    </div>
-    <div id="ground"></div>
-  </div>
-
-  <div id="toolbox">
-    <img id="seed" src="assets/grow/seed.png" class="draggable" />
-    <img id="water-can" src="assets/grow/water-can.png" class="draggable" />
-    <img id="sun" src="assets/grow/sun.png" class="draggable" />
-    <img id="cola" src="assets/grow/cola.png" class="draggable" />
-    <img id="flatscreen" src="assets/grow/flatscreen.png" class="draggable" />
-  </div>
-
   <div id="xp-bar">XP: <span id="xp-value">--</span></div>
 
-  <div id="completion-buttons" style="display: none;">
-    <button onclick="goToNext()">✅ Continue</button>
-    <button onclick="saveAndExit()">💾 Exit</button>
+  <div id="game-container">
+    <div id="grid-board">
+      <div class="cell" data-index="0"></div>
+      <div class="cell" data-index="1"></div>
+      <div class="cell" data-index="2"></div>
+    </div>
+
+    <div id="toolbox">
+      <img src="assets/grow/seed.png" class="draggable" data-id="seed" />
+      <img src="assets/grow/water-can.png" class="draggable" data-id="water-can" />
+      <img src="assets/grow/sun.png" class="draggable" data-id="sun" />
+      <img src="assets/grow/cola.png" class="draggable" data-id="cola" />
+      <img src="assets/grow/flatscreen.png" class="draggable" data-id="flatscreen" />
+    </div>
+
+    <div id="result-box" style="display:none;">
+      <h2 id="result-text">✅ Crops Planted!</h2>
+      <button id="btn-continue">Continue to Toybox 3</button>
+    </div>
   </div>
 
   <script src="../playerState.js"></script>
