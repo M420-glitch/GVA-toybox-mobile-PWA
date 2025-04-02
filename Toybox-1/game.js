@@ -78,6 +78,33 @@ document.addEventListener('DOMContentLoaded', () => {
 playerState.setCompleted('1'); // '1', '2', etc.
 playerState.setXP(playerState.getXP() + 5);
 playerState.save();
+window.addEventListener("DOMContentLoaded", () => {
+  playerState.load();
+  document.getElementById("xp-value").textContent = playerState.getXP();
+});
+
+// Simulate "task complete" (you can trigger this however your toybox 1 ends)
+function markToybox1Complete() {
+  if (!playerState.isCompleted("1")) {
+    const xp = playerState.getXP() + 5;
+    playerState.setXP(xp);
+    playerState.markCompleted("1");
+    playerState.save();
+    document.getElementById("xp-value").textContent = xp;
+  }
+
+  document.getElementById("completion-buttons").style.display = "flex";
+}
+
+// Example trigger — call `markToybox1Complete()` when your Toybox-1 success event fires
+
+function goToNext() {
+  window.location.href = "../Toybox-2/index.html";
+}
+
+function goToMap() {
+  window.location.href = "../ProgressMap/index.html";
+}
 
   });
 });

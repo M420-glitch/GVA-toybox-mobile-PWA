@@ -1,83 +1,79 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const draggables = document.querySelectorAll('.draggable');
-  const cells = document.querySelectorAll('.cell');
-  const resultBox = document.getElementById('result-box');
-  const tryAgainBtn = document.getElementById('try-again');
+window.addEventListener("DOMContentLoaded", () => {
+  playerState.load();
+  document.getElementById("xp-value").textContent = playerState.getXP();
+});
 
-  let activeClone = null;
-  let activeOriginal = null;
-  let offsetX = 0;
-  let offsetY = 0;
-  let droppedItems = [];
+let dragged = null;
+let placedItems = [];
+const correctItems = ['seed', 'water-can', 'sun'];
 
-  draggables.forEach(el => {
-    el.addEventListener('touchstart', (event) => {
-      activeOriginal = el;
-      const rect = el.getBoundingClientRect();
-      offsetX = event.touches[0].clientX - rect.left;
-      offsetY = event.touches[0].clientY - rect.top;
-
-      activeClone = el.cloneNode(true);
-      activeClone.classList.add('clone');
-      document.body.appendChild(activeClone);
-      moveClone(event.touches[0].clientX, event.touches[0].clientY);
-    });
-
-    el.addEventListener('touchmove', (event) => {
-      if (!activeClone) return;
-      event.preventDefault();
-      moveClone(event.touches[0].clientX, event.touches[0].clientY);
-    }, { passive: false });
-
-    el.addEventListener('touchend', () => {
-      if (!activeClone || !activeOriginal) return;
-
-      const cloneRect = activeClone.getBoundingClientRect();
-      cells.forEach(cell => {
-        const cellRect = cell.getBoundingClientRect();
-        const centerX = cloneRect.left + cloneRect.width / 2;
-        const centerY = cloneRect.top + cloneRect.height / 2;
-
-        const isInside =
-          centerX >= cellRect.left &&
-          centerX <= cellRect.right &&
-          centerY >= cellRect.top &&
-          centerY <= cellRect.bottom;
-
-        if (isInside && cell.children.length === 0) {
-          const value = activeOriginal.dataset.value;
-          if (!droppedItems.includes(value)) {
-            droppedItems.push(value);
-            const placed = activeOriginal.cloneNode(true);
-            placed.classList.remove('draggable');
-            cell.appendChild(placed);
-          }
-        }
-      });
-
-      document.body.removeChild(activeClone);
-      activeClone = null;
-      activeOriginal = null;
-
-      if (droppedItems.length === 12) {
-        resultBox.style.display = 'block';
-      }
-    });
+document.querySelectorAll('.draggable').forEach(el => {
+  el.addEventListener('dragstart', e => {
+    dragged = e.target;
+    setTimeout(() => e.target.style.visibility = 'hidden', 0);
   });
 
-  function moveClone(x, y) {
-    activeClone.style.left = (x - offsetX) + 'px';
-    activeClone.style.top = (y - offsetY) + 'px';
-  }
-
-  tryAgainBtn.addEventListener('click', () => {
-    cells.forEach(cell => cell.innerHTML = '');
-    droppedItems = [];
-    resultBox.style.display = 'none';
-    // Mark as completed and award XP (adjust XP as needed)
-playerState.setCompleted('2'); // '1', '2', etc.
-playerState.setXP(playerState.getXP() + 5);
-playerState.save();
-
+  el.addEventListener('dragend', e => {
+    e.target.style.visibility = 'visible';
   });
 });
+
+document.querySelectorAll('.slot').forEach(slot => {
+  slot.addEventListener('dragover', e => e.preventDefault());
+
+  slot.addEventListener('drop', e => {
+    e.preventDefault();
+    if (!dragged || slot.children.length > 0) return;
+
+    dragged.style.visibility = 'visible';
+    dragged.setAttribute('draggable', 'false');
+    dragged.style.position = 'static';
+    slot.appendChild(dragged);
+    placedItems.push(dragged.id);
+    dragged = null;
+
+    if (placedItems.length === 3) checkResult();
+  });
+});
+
+function checkResult() {
+  const isValid = correctItems.every(item => placedItems.includes(item));
+  if (isValid) {
+    if (!playerState.isCompleted("2")) {
+      let xp = playerState.getXP() + 5;
+      playerState.setXP(xp);
+      playerState.markCompleted("2");
+      playerState.save();
+      document.getElementById("xp-value").textContent = xp;
+    }
+    document.getElementById("completion-buttons").style.display = 'flex';
+  } else {
+    alert("❌ Something’s wrong in the soil.");
+    resetDropzone();
+  }
+}
+
+function resetDropzone() {
+  placedItems = [];
+  document.querySelectorAll('.slot').forEach(slot => {
+    const img = slot.querySelector('img');
+    if (img) {
+      document.getElementById('toolbox').appendChild(img);
+      img.setAttribute('draggable', 'true');
+      img.style.position = 'static';
+    }
+  });
+}
+
+function goToNext() {
+  window.location.href = "../Toybox-3/index.html";
+}
+
+function goToMap() {
+  window.location.href = "../ProgressMap/index.html";
+}
+
+function saveAndExit() {
+  playerState.save();
+  alert("Game saved.");
+}
