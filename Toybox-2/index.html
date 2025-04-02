@@ -2,32 +2,50 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Ground Toybox</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="toybox-wrapper">
-    <header>
-      <div id="xp-box">XP: <span id="xp-count">0</span></div>
-      <h1>GROUND TOYBOX</h1>
-    </header>
-
-    <main id="game-area">
-      <div class="slot" data-match="1"></div>
-      <div class="slot" data-match="2"></div>
-      <div class="slot" data-match="3"></div>
-    </main>
-
-    <div id="toolbox">
-      <img src="assets/item1.png" class="draggable" draggable="true" data-id="1" />
-      <img src="assets/item2.png" class="draggable" draggable="true" data-id="2" />
-      <img src="assets/item3.png" class="draggable" draggable="true" data-id="3" />
-    </div>
-
-    <button id="continue-btn" style="display:none;">Continue</button>
+  <div id="top-left-controls">
+    <button onclick="goToMap()">🗺️ Progress Map</button>
+    <button onclick="saveAndExit()">💾 Save & Exit</button>
   </div>
 
-  <script src="script.js"></script>
+  <h1>🌱 Ground Toybox</h1>
+  <p class="description">Grow crops for the community. Pick 3 essentials from the toolbox. Not everything belongs in the soil.</p>
+
+  <div id="game-container">
+    <div id="game-area">
+      <div id="grow-dropzone">
+        <div class="grow-slot" data-slot="1"></div>
+        <div class="grow-slot" data-slot="2"></div>
+        <div class="grow-slot" data-slot="3"></div>
+      </div>
+      <div id="ground-strip"></div>
+    </div>
+
+    <div id="toolbox">
+      <p>Toolbox:</p>
+      <img id="seed" src="assets/grow/seed.png" class="draggable" draggable="true" title="Seed" />
+      <img id="water-can" src="assets/grow/water-can.png" class="draggable" draggable="true" title="Watering Can" />
+      <img id="sun" src="assets/grow/sun.png" class="draggable" draggable="true" title="Sunlight" />
+      <img id="cola" src="assets/grow/cola.png" class="draggable" draggable="true" title="Can of Cola" />
+      <img id="flatscreen" src="assets/grow/flatscreen.png" class="draggable" draggable="true" title="Flat Screen TV" />
+    </div>
+  </div>
+
+  <div id="xp-counter">
+    XP: <span id="xp-value">--</span>
+  </div>
+
+  <div id="completion-buttons" style="display: none;">
+    <button id="btn-continue">Continue</button>
+    <button id="btn-exit">Exit</button>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="../playerState.js"></script>
+  <script src="game.js?v=mobile2"></script>
 </body>
 </html>
