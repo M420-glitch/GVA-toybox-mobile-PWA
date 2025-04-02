@@ -1,3 +1,5 @@
+let deferredPrompt;
+
 window.addEventListener("DOMContentLoaded", () => {
   playerState.load();
   const currentXP = playerState.getXP();
@@ -18,6 +20,24 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// Navigate to toybox
 function goTo(folderName) {
   window.location.href = `../${folderName}/index.html`;
 }
+
+// PWA install prompt
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-btn').style.display = 'inline-block';
+});
+
+document.getElementById('install-btn').addEventListener('click', () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(result => {
+      deferredPrompt = null;
+      document.getElementById('install-btn').style.display = 'none';
+    });
+  }
+});

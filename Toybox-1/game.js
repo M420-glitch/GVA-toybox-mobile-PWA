@@ -74,5 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
     cells.forEach(cell => cell.innerHTML = '');
     droppedItems = [];
     resultBox.style.display = 'none';
+    // Mark as completed and award XP (adjust XP as needed)
+playerState.setCompleted('1'); // '1', '2', etc.
+playerState.setXP(playerState.getXP() + 5);
+playerState.save();
+
   });
 });

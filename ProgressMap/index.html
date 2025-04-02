@@ -1,100 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>GVA Toybox – PWA Launcher</title>
-    <link rel="manifest" href="../manifest.json" />
-    <link rel="icon" href="../icon.png" />
-    <style>
-      body {
-        margin: 0;
-        font-family: sans-serif;
-        background: #000;
-        color: #fff;
-        height: 100dvh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        overflow: hidden;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>📍 GVA Toybox Progress Map</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="icon" href="../icon.png" />
+</head>
+<body>
+  <h1>📍 GVA Progress Map</h1>
+  <div id="progress-wrapper">
+    <div id="progress-bar">
+      <!-- 1 to 10 = 50 XP | 11–16 = forks -->
+      <button data-xp="0" onclick="goTo('Toybox-1')">1</button>
+      <button data-xp="5" onclick="goTo('Toybox-2')">2</button>
+      <button data-xp="10" onclick="goTo('Toybox-3')">3</button>
+      <button data-xp="15" onclick="goTo('Toybox-4')">4</button>
+      <button data-xp="20" onclick="goTo('Toybox-5')">5</button>
+      <button data-xp="25" onclick="goTo('Toybox-6')">6</button>
+      <button data-xp="30" onclick="goTo('Toybox-7')">7</button>
+      <button data-xp="35" onclick="goTo('Toybox-8')">8</button>
+      <button data-xp="40" onclick="goTo('Toybox-9')">9</button>
+      <button data-xp="45" onclick="goTo('Toybox-10')">10</button>
 
-      h1 {
-        font-size: 1.8em;
-        margin-bottom: 0.5em;
-      }
+      <div class="forks">
+        <button data-xp="50" onclick="goTo('Toybox-11A')">11A</button>
+        <button data-xp="50" onclick="goTo('Toybox-11B')">11B</button>
+        <button data-xp="50" onclick="goTo('Toybox-11C')">11C</button>
+        <button data-xp="50" onclick="goTo('Toybox-11D')">11D</button>
+      </div>
 
-      #install-btn {
-        padding: 15px 25px;
-        font-size: 1.2em;
-        background: #4caf50;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        display: none;
-        margin-top: 20px;
-      }
+      <div class="forks">
+        <button data-xp="55" onclick="goTo('Toybox-12A')">12A</button>
+        <button data-xp="55" onclick="goTo('Toybox-12B')">12B</button>
+        <button data-xp="55" onclick="goTo('Toybox-12C')">12C</button>
+        <button data-xp="55" onclick="goTo('Toybox-12D')">12D</button>
+      </div>
 
-      #fallback {
-        margin-top: 30px;
-        font-size: 0.9em;
-        color: #aaa;
-      }
+      <div class="forks">
+        <button data-xp="60" onclick="goTo('Toybox-13A')">13A</button>
+        <button data-xp="60" onclick="goTo('Toybox-13B')">13B</button>
+        <button data-xp="60" onclick="goTo('Toybox-13C')">13C</button>
+        <button data-xp="60" onclick="goTo('Toybox-13D')">13D</button>
+      </div>
 
-      #play-btn {
-        margin-top: 40px;
-        background: #2196f3;
-        padding: 12px 20px;
-        font-size: 1em;
-        border: none;
-        border-radius: 6px;
-        color: white;
-        cursor: pointer;
-      }
-    </style>
-  </head>
+      <div class="forks">
+        <button data-xp="65" onclick="goTo('Toybox-14A')">14A</button>
+        <button data-xp="65" onclick="goTo('Toybox-14B')">14B</button>
+        <button data-xp="65" onclick="goTo('Toybox-14C')">14C</button>
+        <button data-xp="65" onclick="goTo('Toybox-14D')">14D</button>
+      </div>
 
-  <body>
-    <h1>📦 GVA Toybox (Mobile Test)</h1>
-    <button id="install-btn">📲 Install GVA Toybox</button>
+      <div class="forks">
+        <button data-xp="70" onclick="goTo('Toybox-15A')">15A</button>
+        <button data-xp="70" onclick="goTo('Toybox-15B')">15B</button>
+        <button data-xp="70" onclick="goTo('Toybox-15C')">15C</button>
+        <button data-xp="70" onclick="goTo('Toybox-15D')">15D</button>
+      </div>
 
-    <button id="play-btn">🧪 Launch Toybox Test</button>
+      <div class="forks">
+        <button data-xp="75" onclick="goTo('Toybox-16A')">16A</button>
+        <button data-xp="75" onclick="goTo('Toybox-16B')">16B</button>
+        <button data-xp="75" onclick="goTo('Toybox-16C')">16C</button>
+        <button data-xp="75" onclick="goTo('Toybox-16D')">16D</button>
+      </div>
 
-    <div id="fallback">
-      If the install button doesn't appear,<br />
-      use your browser’s menu → “Add to Home screen”
+      <div class="final-line">
+        <button data-xp="80" onclick="goTo('Toybox-17')">17</button>
+        <button data-xp="85" onclick="goTo('Toybox-18')">18</button>
+      </div>
     </div>
 
-    <script>
-      let deferredPrompt;
+    <p id="xp-display">Current XP: --</p>
+    <button id="install-btn">📲 Install GVA Toybox</button>
+    <div id="fallback">If no install prompt appears,<br>use your browser menu → Add to Home Screen</div>
+  </div>
 
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById('install-btn').style.display = 'inline-block';
-      });
-
-      document.getElementById('install-btn').addEventListener('click', () => {
-        if (deferredPrompt) {
-          deferredPrompt.prompt();
-          deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-              console.log('✅ User accepted A2HS prompt');
-            } else {
-              console.log('❌ User dismissed A2HS prompt');
-            }
-            deferredPrompt = null;
-            document.getElementById('install-btn').style.display = 'none';
-          });
-        }
-      });
-
-      document.getElementById('play-btn').addEventListener('click', () => {
-        window.location.href = '../Toybox-test%20-%20Copy/index.html';
-      });
-    </script>
-  </body>
+  <script src="../playerState.js"></script>
+  <script src="map.js"></script>
+</body>
 </html>
