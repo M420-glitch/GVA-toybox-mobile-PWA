@@ -2,15 +2,19 @@ document.addEventListener('DOMContentLoaded', () => {
   playerState.load();
   document.getElementById('xp-value').textContent = playerState.getXP();
 
-  const draggables = document.querySelectorAll('.draggable');
-  const slots = document.querySelectorAll('.cell');
   const correctItems = ['seed', 'water-can', 'sun'];
-  let droppedItems = [];
+  const dropIndexes = [12, 13, 14, 15, 16, 17]; // A3–F3
+  const draggables = document.querySelectorAll('.draggable');
+  const cells = document.querySelectorAll('.cell');
+  const resultBox = document.getElementById('result-box');
+  const resultText = document.getElementById('result-text');
+  const continueBtn = document.getElementById('btn-continue');
 
   let activeClone = null;
   let activeOriginal = null;
   let offsetX = 0;
   let offsetY = 0;
+  let placedItems = [];
 
   draggables.forEach(el => {
     el.addEventListener('touchstart', (event) => {
@@ -35,21 +39,28 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!activeClone || !activeOriginal) return;
 
       const cloneRect = activeClone.getBoundingClientRect();
-      slots.forEach(slot => {
-        const rect = slot.getBoundingClientRect();
+      let dropped = false;
+
+      cells.forEach(cell => {
+        const index = parseInt(cell.dataset.index);
+        const cellRect = cell.getBoundingClientRect();
         const centerX = cloneRect.left + cloneRect.width / 2;
         const centerY = cloneRect.top + cloneRect.height / 2;
 
-        const isInside = centerX >= rect.left && centerX <= rect.right &&
-                         centerY >= rect.top && centerY <= rect.bottom;
+        const isInside =
+          centerX >= cellRect.left &&
+          centerX <= cellRect.right &&
+          centerY >= cellRect.top &&
+          centerY <= cellRect.bottom;
 
-        if (isInside && slot.children.length === 0) {
+        if (isInside && dropIndexes.includes(index) && cell.children.length === 0) {
           const id = activeOriginal.dataset.id;
-          if (!droppedItems.includes(id)) {
-            droppedItems.push(id);
+          if (!placedItems.includes(id)) {
+            placedItems.push(id);
             const placed = activeOriginal.cloneNode(true);
             placed.classList.remove('draggable');
-            slot.appendChild(placed);
+            cell.appendChild(placed);
+            dropped = true;
           }
         }
       });
@@ -58,8 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
       activeClone = null;
       activeOriginal = null;
 
-      if (droppedItems.length === 3) checkResult();
+      if (dropped && placedItems.length === 3) {
+        checkGrowResult();
+      }
     });
+  });
+
+  continueBtn.addEventListener('click', () => {
+    window.location.href = "../Toybox-3/index.html";
   });
 
   function moveClone(x, y) {
@@ -67,37 +84,29 @@ document.addEventListener('DOMContentLoaded', () => {
     activeClone.style.top = (y - offsetY) + 'px';
   }
 
-  function checkResult() {
-    const isCorrect = correctItems.every(item => droppedItems.includes(item));
-    if (isCorrect) {
-      awardXP();
-      document.getElementById('result-box').style.display = 'block';
-    } else {
-      alert('❌ Something’s not right in the soil... Try again.');
-      reset();
-    }
-  }
+  function checkGrowResult() {
+    const isValid = correctItems.every(id => placedItems.includes(id));
+    const xpVal = document.getElementById('xp-value');
 
-  function reset() {
-    droppedItems = [];
-    slots.forEach(slot => {
-      while (slot.firstChild) {
-        slot.removeChild(slot.firstChild);
+    if (isValid) {
+      if (!playerState.isCompleted("2")) {
+        let xp = playerState.getXP();
+        playerState.setXP(xp + 5);
+        playerState.markCompleted("2");
+        playerState.save();
       }
-    });
-  }
+      xpVal.textContent = playerState.getXP();
+      resultText.textContent = "✅ Crops successfully planted!";
+      resultBox.style.display = "block";
+    } else {
+      resultText.textContent = "❌ Something’s not right in the soil...";
+      resultBox.style.display = "block";
 
-  function awardXP() {
-    if (!playerState.isCompleted("2")) {
-      let xp = playerState.getXP();
-      playerState.setXP(xp + 5);
-      playerState.markCompleted("2");
-      playerState.save();
-      document.getElementById('xp-value').textContent = playerState.getXP();
+      placedItems = [];
+      cells.forEach(cell => {
+        const item = cell.querySelector('img');
+        if (item) item.remove();
+      });
     }
   }
-
-  document.getElementById('btn-continue').addEventListener('click', () => {
-    window.location.href = "../Toybox-3/index.html";
-  });
 });

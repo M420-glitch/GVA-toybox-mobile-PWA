@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Toybox 2 – Ground Me</title>
+  <title>Toybox-2M – Ground Game</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -11,23 +11,31 @@
 
   <div id="game-container">
     <div id="grid-board">
-      <!-- 3 grow slots for planting -->
-      <div class="cell" data-slot="1"></div>
-      <div class="cell" data-slot="2"></div>
-      <div class="cell" data-slot="3"></div>
+      <!-- 6x6 grid cells -->
+      <!-- Row 6 (top) to Row 1 (bottom) -->
+      <!-- We'll tag A3-F3 (index 12–17) as dropzones -->
+      <!-- Cell index: row*6 + col -->
+      <!-- i.e., A3 = (3-1)*6 + 0 = index 12 -->
+      ${[...Array(36).keys()].map(i => {
+        const dropIndexes = [12, 13, 14, 15, 16, 17]; // A3–F3
+        const className = dropIndexes.includes(i) ? 'cell dropzone' : 'cell';
+        return `<div class="${className}" data-index="${i}"></div>`;
+      }).join('')}
     </div>
 
+    <div id="ground-strip"></div>
+
     <div id="toolbox">
-      <img src="assets/grow/seed.png" class="draggable" data-id="seed" title="Seed" />
-      <img src="assets/grow/water-can.png" class="draggable" data-id="water-can" title="Watering Can" />
-      <img src="assets/grow/sun.png" class="draggable" data-id="sun" title="Sunlight" />
-      <img src="assets/grow/cola.png" class="draggable" data-id="cola" title="Can of Cola" />
-      <img src="assets/grow/flatscreen.png" class="draggable" data-id="flatscreen" title="Flat Screen TV" />
+      <img class="draggable" src="assets/grow/seed.png" data-id="seed" />
+      <img class="draggable" src="assets/grow/water-can.png" data-id="water-can" />
+      <img class="draggable" src="assets/grow/sun.png" data-id="sun" />
+      <img class="draggable" src="assets/grow/cola.png" data-id="cola" />
+      <img class="draggable" src="assets/grow/flatscreen.png" data-id="flatscreen" />
     </div>
 
     <div id="result-box" style="display:none;">
       <h2 id="result-text">✅ Crops successfully planted!</h2>
-      <button id="btn-continue">Continue to Toybox 3</button>
+      <button id="btn-continue">Continue</button>
     </div>
   </div>
 
