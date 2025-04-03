@@ -125,9 +125,15 @@ document.addEventListener('DOMContentLoaded', () => {
       xpVal.textContent = playerState.getXP();
       modalResultText.textContent = "✅ Crops successfully planted!";
       resultModal.classList.remove('hidden'); // Show the modal
+      // Hide the "Return to Map" button on success
+      returnMapBtn.style.display = 'none';
+      continue3Btn.style.display = 'inline-block';
     } else {
       modalResultText.textContent = "❌ Something’s not right in the soil...";
       resultModal.classList.remove('hidden'); // Show the modal
+      // Show the "Return to Map" button on fail
+      returnMapBtn.style.display = 'inline-block';
+      continue3Btn.style.display = 'none';
 
       // Reset: clear all items from drop zones and reset placed items
       placedItems = [];

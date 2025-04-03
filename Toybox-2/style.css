@@ -177,3 +177,12 @@ body {
 .modal-content button:hover {
   background-color: #367c39; /* Darker green on hover */
 }
+
+/* Style for fail modal buttons */
+.modal-content button.fail-button {
+  background-color: #f44336; /* Red background */
+}
+
+.modal-content button.fail-button:hover {
+  background-color: #ba000d; /* Darker red on hover */
+}
