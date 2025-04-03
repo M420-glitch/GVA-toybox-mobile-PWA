@@ -1,3 +1,8 @@
+function isPWA() {
+  return window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true; // For iOS
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // Load player XP/state
   playerState.load();
@@ -169,4 +174,9 @@ document.addEventListener('DOMContentLoaded', () => {
   returnMapBtn.addEventListener('click', () => {
     window.location.href = "../map/index.html"; // Link to the progress map
   });
+
+  if (isPWA()) {
+    // Add a class to the body if it's a PWA
+    document.body.classList.add('pwa-mode');
+  }
 });

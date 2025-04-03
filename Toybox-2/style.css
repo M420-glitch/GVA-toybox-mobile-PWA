@@ -19,6 +19,18 @@ body {
   align-items: center; /* Center vertically */
 }
 
+/* Default styles (for browser mode) */
+html, body {
+  overflow: auto; /* Allow scrolling */
+  width: 100vw;
+  height: 100dvh;
+}
+
+/* PWA mode styles */
+body.pwa-mode {
+  overflow: hidden; /* Disable scrolling */
+}
+
 /* XP counter styling */
 #xp-bar {
   position: fixed;
