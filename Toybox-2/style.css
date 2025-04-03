@@ -29,6 +29,8 @@ html, body {
 /* PWA mode styles */
 body.pwa-mode {
   overflow: hidden; /* Disable scrolling */
+  width: 100vw;
+  height: 100dvh;
 }
 
 /* XP counter styling */
