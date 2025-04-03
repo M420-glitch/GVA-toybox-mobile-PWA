@@ -8,8 +8,15 @@ document.addEventListener('DOMContentLoaded', () => {
   playerState.load();
   document.getElementById('xp-value').textContent = playerState.getXP();
 
-  // Correct items that must be placed (from desktop: seed, water-can, sun)
+  // Correct items that must be placed (from desktop: sun, converter, light-bulb)
   const correctItems = ['sun', 'converter', 'light-bulb'];
+
+  // Correct order of items
+  const correctOrder = [
+    { dropZoneIndex: 19, itemId: 'sun' },
+    { dropZoneIndex: 21, itemId: 'converter' },
+    { dropZoneIndex: 23, itemId: 'light-bulb' }
+  ];
 
   // Query draggable elements and drop zone containers
   const draggables = document.querySelectorAll('.draggable');
@@ -34,13 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Get the indices of the drop zones
   const dropZoneIndices = [19, 21, 23];
-
-    // Define the correct order and the corresponding drop zone indices
-    const correctOrder = [
-      { itemId: 'sun', dropZoneIndex: 19 }, // A3
-      { itemId: 'converter', dropZoneIndex: 21 }, // C3
-      { itemId: 'light-bulb', dropZoneIndex: 23 }  // E3
-    ];
 
   // Touch event listeners for each draggable
   draggables.forEach(el => {
@@ -83,28 +83,15 @@ document.addEventListener('DOMContentLoaded', () => {
           centerY >= dropZoneRect.top &&
           centerY <= dropZoneRect.bottom;
 
-          // Check if the drop zone already has an item
-          if (isInside && !dropZoneHasItem[index]) {
-            const itemId = activeOriginal.dataset.id;
-
-            // Find the correct order object for the current drop zone
-            const correctItem = correctOrder.find(item => item.dropZoneIndex === dropZoneIndex);
-
-            // Check if the dropped item matches the correct item for this drop zone
-            if (correctItem && itemId === correctItem.itemId) {
-                placedItems.push(itemId);
-                const placed = activeOriginal.cloneNode(true);
-                placed.classList.remove('draggable');
-                dropZone.appendChild(placed);
-                dropped = true;
-                dropZoneHasItem[index] = true;
-            } else {
-                // Incorrect item for this drop zone
-                // modalResultText.textContent = "❌ Wrong item for this slot!";
-                // resultModal.classList.remove('hidden');
-                // resetGame();
-                // return; // Exit the function early
-            }
+        // Check if the drop zone already has an item
+        if (isInside && !dropZoneHasItem[index]) {
+          const itemId = activeOriginal.dataset.id;
+          placedItems.push(itemId);
+          const placed = activeOriginal.cloneNode(true);
+          placed.classList.remove('draggable');
+          dropZone.appendChild(placed);
+          dropped = true;
+          dropZoneHasItem[index] = true;
         }
       });
 
@@ -133,59 +120,65 @@ document.addEventListener('DOMContentLoaded', () => {
     activeClone.style.top = (y - offsetY) + 'px';
   }
 
-    // Check if the placed items are correct
-    function checkGrowResult() {
-      // Check if the placed items are correct and in the correct order
-      const isValid = correctOrder.every((item, index) => {
-          const placedItemId = document.querySelector(`.cell[data-index="${item.dropZoneIndex}"] img`)?.dataset.id;
-          return placedItemId === item.itemId;
-      });
+  // Check if the placed items are correct
+  function checkGrowResult() {
+    const isValid = correctItems.every((itemId, index) => {
+      const dropZoneIndex = dropZoneIndices[index];
+      const dropZone = document.querySelector(`.cell[data-index="${dropZoneIndex}"]`);
+      const placedItemId = dropZone.querySelector('.draggable')?.dataset?.id;
+      return placedItemId === itemId;
+    });
 
-      const xpVal = document.getElementById('xp-value');
+    const xpVal = document.getElementById('xp-value');
 
-      if (isValid) {
-          if (!playerState.isCompleted("3")) {
-              let xp = playerState.getXP();
-              playerState.setXP(xp + 5);
-              playerState.markCompleted("3");
-              playerState.save();
-          }
-          xpVal.textContent = playerState.getXP();
-          modalResultText.textContent = "✅ You turned sunlight into light!";
-          resultModal.classList.remove('hidden'); // Show the modal
-          // Hide the "Return to Map" button on success
-          returnMapBtn.style.display = 'none';
-          continue3Btn.style.display = 'inline-block';
-      } else {
-          modalResultText.textContent = "❌ Incorrect sequence. Try again...";
-          resultModal.classList.remove('hidden'); // Show the modal
-          // Show the "Return to Map" button on fail
-          returnMapBtn.style.display = 'inline-block';
-          continue3Btn.style.display = 'none';
+    if (isValid) {
+      if (!playerState.isCompleted("3")) {
+        let xp = playerState.getXP();
+        playerState.setXP(xp + 5);
+        playerState.markCompleted("3");
+        playerState.save();
       }
-  }
+      xpVal.textContent = playerState.getXP();
+      modalResultText.textContent = "✅ You turned sunlight into light!";
+      resultModal.classList.remove('hidden'); // Show the modal
+      // Hide the "Return to Map" button on success
+      returnMapBtn.style.display = 'none';
+      continue3Btn.style.display = 'inline-block';
+    } else {
+      modalResultText.textContent = "❌ Something’s not right in the setup...";
+      resultModal.classList.remove('hidden'); // Show the modal
+      // Show the "Return to Map" button on fail
+      returnMapBtn.style.display = 'inline-block';
+      continue3Btn.style.display = 'none';
 
-  // Reset the game state
-  function resetGame() {
-    // Reset: clear all items from drop zones and reset placed items
-    placedItems = [];
-    dropZoneIndices.forEach(dropZoneIndex => {
+      // Reset: clear all items from drop zones and reset placed items
+      placedItems = [];
+      dropZoneIndices.forEach(dropZoneIndex => {
         const dropZone = document.querySelector(`.cell[data-index="${dropZoneIndex}"]`);
         while (dropZone.firstChild) {
-            dropZone.removeChild(dropZone.firstChild);
+          dropZone.removeChild(dropZone.firstChild);
         }
-    });
-    dropZoneHasItem = [false, false, false];
-}
+      });
+      dropZoneHasItem = [false, false, false];
+    }
+  }
 
   // Event listeners for modal buttons
   tryAgainBtn.addEventListener('click', () => {
     resultModal.classList.add('hidden'); // Hide the modal
-    resetGame();
+    // Reset the game state (clear placed items, etc.)
+    placedItems = [];
+    dropZoneIndices.forEach(dropZoneIndex => {
+      const dropZone = document.querySelector(`.cell[data-index="${dropZoneIndex}"]`);
+      while (dropZone.firstChild) {
+        dropZone.removeChild(dropZone.firstChild);
+      }
+    });
+    dropZoneHasItem = [false, false, false];
   });
 
   continue3Btn.addEventListener('click', () => {
-    window.location.href = "../Toybox-4/index.html";
+    window.location.href = "../Toybox-3/index.html";
   });
 
   // Add event listener for the "Return to Map" button
