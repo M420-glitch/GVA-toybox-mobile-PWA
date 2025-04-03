@@ -122,8 +122,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Check if the placed items are correct
   function checkGrowResult() {
-    const isValid = correctItems.every((itemId) => {
-      return placedItems.some(placedItem => placedItem.itemId === itemId);
+    let isValid = true;
+
+    // Check if each item is in the correct drop zone
+    correctOrder.forEach(correctItem => {
+      const placedItem = placedItems.find(item => item.dropZoneIndex === correctItem.dropZoneIndex);
+      if (!placedItem || placedItem.itemId !== correctItem.itemId) {
+        isValid = false;
+      }
     });
 
     const xpVal = document.getElementById('xp-value');
