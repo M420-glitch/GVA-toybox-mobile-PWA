@@ -47,7 +47,7 @@ body {
   width: 324px;
   height: 324px;
   display: grid;
-  grid-template-columns: repeat(6, 54px); /* Adjust column definitions */
+  grid-template-columns: repeat(6, 54px);
   grid-template-rows: repeat(6, 54px);
   gap: 2px;
   margin-bottom: 12px;
@@ -91,6 +91,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* Style for images *within* the drop zones */
+.drop-zone-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 /* Toolbox styling */
