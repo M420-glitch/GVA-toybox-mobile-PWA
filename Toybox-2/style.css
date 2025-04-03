@@ -6,13 +6,16 @@
 }
 
 /* Fullscreen locked viewport for mobile portrait */
-html, body {
+html,
+body {
   overflow: hidden;
   width: 100vw;
   height: 100dvh;
   background-color: #f0f0f0;
   font-family: sans-serif;
   touch-action: none;
+  display: flex; /* Add flexbox */
+  justify-content: center; /* Center horizontally */
 }
 
 /* XP counter styling */
@@ -78,7 +81,16 @@ html, body {
 
 /* Valid drop zones: add a soil background using your ground asset */
 .cell.drop-zone {
-  border: 2px solid #6b4; /* Highlight drop zones */
+  /* border: 2px solid #6b4;  Remove border from individual cells */
+}
+
+.drop-zone-container {
+  width: 108px;
+  height: 54px;
+  border: 2px solid #6b4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Toolbox styling */

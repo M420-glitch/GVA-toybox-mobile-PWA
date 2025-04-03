@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const resultBox = document.getElementById('result-box');
   const resultText = document.getElementById('result-text');
   const continueBtn = document.getElementById('btn-continue');
+  const resultModal = document.getElementById('result-modal');
+  const modalResultText = document.getElementById('modal-result-text');
+  const tryAgainBtn = document.getElementById('btn-try-again');
+  const continue3Btn = document.getElementById('btn-continue-3');
 
   let activeClone = null;
   let activeOriginal = null;
@@ -112,11 +116,11 @@ document.addEventListener('DOMContentLoaded', () => {
         playerState.save();
       }
       xpVal.textContent = playerState.getXP();
-      resultText.textContent = "✅ Crops successfully planted!";
-      resultBox.style.display = "block";
+      modalResultText.textContent = "✅ Crops successfully planted!";
+      resultModal.classList.remove('hidden'); // Show the modal
     } else {
-      resultText.textContent = "❌ Something’s not right in the soil...";
-      resultBox.style.display = "block";
+      modalResultText.textContent = "❌ Something’s not right in the soil...";
+      resultModal.classList.remove('hidden'); // Show the modal
 
       // Reset: clear all items from drop zones and reset placed items
       placedItems = [];
@@ -128,4 +132,21 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   }
+
+  // Event listeners for modal buttons
+  tryAgainBtn.addEventListener('click', () => {
+    resultModal.classList.add('hidden'); // Hide the modal
+    // Reset the game state (clear placed items, etc.)
+    placedItems = [];
+    dropZoneContainers.forEach((container, index) => {
+      while (container.firstChild) {
+        container.removeChild(container.firstChild);
+      }
+      containerHasItem[index] = false; // Reset container item status
+    });
+  });
+
+  continue3Btn.addEventListener('click', () => {
+    window.location.href = "../Toybox-3/index.html";
+  });
 });
