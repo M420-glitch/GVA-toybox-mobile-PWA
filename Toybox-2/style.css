@@ -1,86 +1,45 @@
+/* CSS RESET */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Fullscreen locked viewport for mobile portrait */
 html, body {
+  overflow: hidden;
   width: 100vw;
   height: 100dvh;
-  overflow: hidden;
   background-color: #f0f0f0;
   font-family: sans-serif;
   touch-action: none;
 }
 
-.hidden {
-  display: none;
-}
-
-/* Modal */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100dvh;
-  background: rgba(0,0,0,0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  max-width: 90%;
-}
-
-.modal-content h1 {
-  margin-bottom: 10px;
-  font-size: 22px;
-}
-
-.modal-content p {
-  font-size: 16px;
-  margin-bottom: 20px;
-}
-
-.modal-content button {
-  padding: 10px 20px;
-  background: #4CAF50;
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-size: 16px;
-}
-
-/* XP bar */
+/* XP counter styling */
 #xp-bar {
   position: fixed;
   top: 10px;
   right: 10px;
+  font-size: 16px;
   background: #000;
   color: #fff;
   padding: 6px 12px;
-  font-size: 16px;
   border-radius: 10px;
   z-index: 1000;
 }
 
-/* Grid area */
+/* Game container */
 #game-container {
   width: 100%;
   height: 100%;
-  padding-top: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
+  padding-top: 40px;
 }
 
+/* 6x6 Grid board: fixed size 324px x 324px */
 #grid-board {
   width: 324px;
   height: 324px;
@@ -88,79 +47,57 @@ html, body {
   grid-template-columns: repeat(6, 54px);
   grid-template-rows: repeat(6, 54px);
   gap: 2px;
-  position: relative;
-  background-image: linear-gradient(to bottom, #eaffea 66.6%, #c2f0c2 33.3%);
+  margin-bottom: 12px;
 }
 
-/* Ground visual at A1–F2 */
-.cell[data-index="30"],
-.cell[data-index="31"],
-.cell[data-index="32"],
-.cell[data-index="33"],
-.cell[data-index="34"],
-.cell[data-index="35"],
-.cell[data-index="24"],
-.cell[data-index="25"],
-.cell[data-index="26"],
-.cell[data-index="27"],
-.cell[data-index="28"],
-.cell[data-index="29"] {
-  background-image: url('assets/grow/ground.png');
-  background-size: cover;
-}
-
-/* Basic cell styling */
+/* Grid cells */
 .cell {
   width: 54px;
   height: 54px;
+  background-color: #eaffea;
   border: 1px dashed #888;
   position: relative;
-  background-color: #eaffea;
   z-index: 1;
 }
 
-/* Drop Zone overlays (108x108) */
-.drop-guide {
-  position: absolute;
-  width: 108px;
-  height: 108px;
-  border: 2px dashed #444;
-  z-index: 2;
+/* Valid drop zones: add a soil background using your ground asset */
+.cell.drop-zone {
+  background: url('assets/grow/ground.png') no-repeat center;
+  background-size: cover;
+  border: 2px solid #6b4; /* Highlight drop zones */
 }
 
-#dropzone1 { left: 0px; top: 108px; }   /* A3–B4 */
-#dropzone2 { left: 108px; top: 108px; } /* C3–D4 */
-#dropzone3 { left: 216px; top: 108px; } /* E3–F4 */
-
-/* Toolbox */
+/* Toolbox styling */
 #toolbox {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 6px;
   max-width: 324px;
-  margin-top: 10px;
+  padding: 8px;
 }
 
+/* Draggable assets: force them to 54x54; object-fit to contain images */
 .draggable {
   width: 54px;
   height: 54px;
   object-fit: contain;
   border-radius: 6px;
-  touch-action: none;
   z-index: 10;
+  touch-action: none;
 }
 
+/* Clone used during dragging */
 .clone {
   position: fixed;
   width: 54px;
   height: 54px;
-  object-fit: contain;
-  pointer-events: none;
   z-index: 9999;
+  pointer-events: none;
+  object-fit: contain;
 }
 
-/* Result */
+/* Result box styling */
 #result-box {
   text-align: center;
   margin-top: 10px;
@@ -172,11 +109,12 @@ html, body {
 }
 
 #btn-continue {
-  margin-top: 10px;
   padding: 10px 20px;
-  background: #4CAF50;
-  border: none;
-  border-radius: 8px;
-  color: white;
   font-size: 16px;
+  margin-top: 10px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
