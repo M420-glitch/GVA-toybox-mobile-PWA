@@ -79,6 +79,12 @@ h1 {
   z-index: 1;
 }
 
+/* Valid drop zones: add a soil background using your ground asset */
+.cell.drop-zone {
+  border: 2px solid #6b4; /* Highlight drop zones */
+  background-color: rgba(107, 187, 68, 0.5); /* Highlight drop zones */
+}
+
 /* Drop zone overlays */
 .drop-guide {
   position: absolute;
