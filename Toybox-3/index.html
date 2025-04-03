@@ -10,50 +10,58 @@
   <!-- Intro Modal -->
   <div id="intro-modal" class="modal">
     <div class="modal-content">
-      <h1>🌱 Light Toybox</h1>
+      <h1>🌱 Light Toybox 2</h1>
       <p>Generate light for the community.<br>Pick 3 essentials from the toolbox.<br>Not everything creates light.</p>
       <button id="start-button">Continue</button>
     </div>
   </div>
 
-  <!-- XP Counter -->
-  <div id="xp-bar">XP: <span id="xp-value">--</span></div>
+  <!-- Top-left controls -->
+  <div id="top-left-controls">
+    <button onclick="goToMap()">🗺️ Progress Map</button>
+    <button onclick="saveAndExit()">💾 Save & Exit</button>
+  </div>
 
-  <!-- Game Container -->
-  <div id="game-container" class="hidden">
-    <div id="grid-board">
-      <!-- 6x6 Grid: 36 cells -->
-      ${[...Array(36).keys()].map(i => `<div class="cell" data-index="${i}"></div>`).join('')}
+  <!-- XP counter -->
+  <div id="xp-counter">XP: <span id="xp-value">--</span></div>
+
+  <div id="game-container">
+    <div id="game-area">
+      <div id="light-dropzone">
+        <div class="light-slot" data-slot="1"></div>
+        <div class="arrow">➡️</div>
+        <div class="light-slot" data-slot="2"></div>
+        <div class="arrow">➡️</div>
+        <div class="light-slot" data-slot="3"></div>
+      </div>
+
+      <div id="ground-strip"></div>
     </div>
 
-    <!-- 3 Drop Zone Guides -->
-    <div class="drop-guide" id="dropzone1"></div>
-    <div class="drop-guide" id="dropzone2"></div>
-    <div class="drop-guide" id="dropzone3"></div>
-
-    <!-- Toolbox Items -->
     <div id="toolbox">
-      <img class="draggable" src="assets/light/sun.png" data-id="sun" />
-      <img class="draggable" src="assets/light/converter.png" data-id="converter" />
-      <img class="draggable" src="assets/light/light-bulb.png" data-id="light-bulb" />
-      <img class="draggable" src="assets/light/pizza.png" data-id="pizza" />
-      <img class="draggable" src="assets/light/cardboard-box.png" data-id="cardboard-box" />
-    </div>
-
-    <!-- Result Area -->
-    <div id="result-box" style="display:none;">
-      <h2 id="result-text"></h2>
-      <button id="btn-continue">Continue to Toybox 4</button>
+      <p>Toolbox:</p>
+      <img id="sun" src="assets/light/sun.png" class="draggable" title="Sunlight" />
+      <img id="converter" src="assets/light/converter.png" class="draggable" title="Converter" />
+      <img id="light-bulb" src="assets/light/light-bulb.png" class="draggable" title="Light Bulb" />
+      <img id="pizza" src="assets/light/pizza.png" class="draggable" title="Pizza" />
+      <img id="cardboard-box" src="assets/light/cardboard-box.png" class="draggable" title="Cardboard Box" />
     </div>
   </div>
 
-  <!-- Scripts -->
+  <div id="completion-buttons" style="display: none;">
+    <button id="btn-continue">Continue</button>
+    <button id="btn-exit">Exit</button>
+  </div>
+
+  <!-- Include player state and game logic -->
   <script src="../playerState.js"></script>
   <script src="game.js"></script>
   <script>
-    document.getElementById('start-button').addEventListener('click', () => {
-      document.getElementById('intro-modal').classList.add('hidden');
-      document.getElementById('game-container').classList.remove('hidden');
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('start-button').addEventListener('click', () => {
+        document.getElementById('intro-modal').classList.add('hidden');
+        document.getElementById('game-container').classList.remove('hidden');
+      });
     });
   </script>
 </body>
