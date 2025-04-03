@@ -1,9 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Load player XP/state
   playerState.load();
   document.getElementById('xp-value').textContent = playerState.getXP();
 
+  // Correct items that must be placed (from desktop: seed, water-can, sun)
   const correctItems = ['seed', 'water-can', 'sun'];
-  const dropIndexes = [12, 13, 14, 15, 16, 17]; // A3–F3
+
+  // Query draggable elements and grid cells (only drop zones are valid)
   const draggables = document.querySelectorAll('.draggable');
   const cells = document.querySelectorAll('.cell');
   const resultBox = document.getElementById('result-box');
@@ -16,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let offsetY = 0;
   let placedItems = [];
 
+  // Touch event listeners for each draggable
   draggables.forEach(el => {
     el.addEventListener('touchstart', (event) => {
       activeOriginal = el;
@@ -23,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
       offsetX = event.touches[0].clientX - rect.left;
       offsetY = event.touches[0].clientY - rect.top;
 
+      // Create a clone for dragging
       activeClone = el.cloneNode(true);
       activeClone.classList.add('clone');
       document.body.appendChild(activeClone);
@@ -41,19 +46,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const cloneRect = activeClone.getBoundingClientRect();
       let dropped = false;
 
+      // Loop through all cells to check drop validity
       cells.forEach(cell => {
-        const index = parseInt(cell.dataset.index);
         const cellRect = cell.getBoundingClientRect();
         const centerX = cloneRect.left + cloneRect.width / 2;
         const centerY = cloneRect.top + cloneRect.height / 2;
 
+        // Check if the clone's center is inside the cell
         const isInside =
           centerX >= cellRect.left &&
           centerX <= cellRect.right &&
           centerY >= cellRect.top &&
           centerY <= cellRect.bottom;
 
-        if (isInside && dropIndexes.includes(index) && cell.children.length === 0) {
+        // Accept drop only if cell is a valid drop zone and empty
+        if (isInside && cell.classList.contains('drop-zone') && cell.children.length === 0) {
           const id = activeOriginal.dataset.id;
           if (!placedItems.includes(id)) {
             placedItems.push(id);
@@ -65,25 +72,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
+      // Remove the clone regardless of drop success
       document.body.removeChild(activeClone);
       activeClone = null;
       activeOriginal = null;
 
+      // If a valid drop occurred and we now have 3 items placed, check result
       if (dropped && placedItems.length === 3) {
         checkGrowResult();
       }
     });
   });
 
+  // Continue button navigates to Toybox-3
   continueBtn.addEventListener('click', () => {
     window.location.href = "../Toybox-3/index.html";
   });
 
+  // Helper function to move the clone element
   function moveClone(x, y) {
     activeClone.style.left = (x - offsetX) + 'px';
     activeClone.style.top = (y - offsetY) + 'px';
   }
 
+  // Check if the placed items are correct
   function checkGrowResult() {
     const isValid = correctItems.every(id => placedItems.includes(id));
     const xpVal = document.getElementById('xp-value');
@@ -102,10 +114,14 @@ document.addEventListener('DOMContentLoaded', () => {
       resultText.textContent = "❌ Something’s not right in the soil...";
       resultBox.style.display = "block";
 
+      // Reset: clear all items from drop zones and reset placed items
       placedItems = [];
       cells.forEach(cell => {
-        const item = cell.querySelector('img');
-        if (item) item.remove();
+        if (cell.classList.contains('drop-zone')) {
+          while (cell.firstChild) {
+            cell.removeChild(cell.firstChild);
+          }
+        }
       });
     }
   }
