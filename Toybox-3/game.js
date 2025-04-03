@@ -125,12 +125,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let isValid = true;
 
     // Check if each item is in the correct drop zone
-    correctOrder.forEach(correctItem => {
+    for (let i = 0; i < correctOrder.length; i++) {
+      const correctItem = correctOrder[i];
       const placedItem = placedItems.find(item => item.dropZoneIndex === correctItem.dropZoneIndex);
+
       if (!placedItem || placedItem.itemId !== correctItem.itemId) {
         isValid = false;
+        break; // Exit the loop if any item is incorrect
       }
-    });
+    }
 
     const xpVal = document.getElementById('xp-value');
 
