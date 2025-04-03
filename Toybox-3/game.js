@@ -1,124 +1,143 @@
-window.addEventListener("DOMContentLoaded", () => {
-  playerState.load(); // Load from localStorage
-  document.getElementById("xp-value").textContent = playerState.getXP();
-});
+document.addEventListener('DOMContentLoaded', () => {
+  // Load player XP/state
+  playerState.load();
+  document.getElementById('xp-value').textContent = playerState.getXP();
 
-let dragged = null;
-let taskComplete = false;
-const correctOrder = ['sun', 'converter', 'light-bulb'];
+  // Correct items that must be placed (from desktop: sun, converter, light-bulb)
+  const correctItems = ['sun', 'converter', 'light-bulb'];
 
-// Init drag logic
-document.querySelectorAll('.draggable').forEach(el => {
-  el.addEventListener('dragstart', e => {
-    dragged = e.target;
-    setTimeout(() => {
-      e.target.style.visibility = 'hidden';
-    }, 0);
+  // Query draggable elements and drop zone containers
+  const draggables = document.querySelectorAll('.draggable');
+  const dropZones = document.querySelectorAll('.light-slot');
+  const resultBox = document.getElementById('result-box');
+  const resultText = document.getElementById('result-text');
+  const continueBtn = document.getElementById('btn-continue');
+  const resultModal = document.getElementById('result-modal');
+  const modalResultText = document.getElementById('modal-result-text');
+
+  let activeClone = null;
+  let activeOriginal = null;
+  let offsetX = 0;
+  let offsetY = 0;
+  let placedItems = [];
+
+  // Track if a drop zone has an item
+  let dropZoneHasItem = [false, false, false];
+
+  // Get the indices of the drop zones
+  const dropZoneIndices = [19, 20, 21];
+
+  // Touch event listeners for each draggable
+  draggables.forEach(el => {
+    el.addEventListener('touchstart', (event) => {
+      activeOriginal = el;
+      const rect = el.getBoundingClientRect();
+      offsetX = event.touches[0].clientX - rect.left;
+      offsetY = event.touches[0].clientY - rect.top;
+
+      // Create a clone for dragging
+      activeClone = el.cloneNode(true);
+      activeClone.classList.add('clone');
+      document.body.appendChild(activeClone);
+      moveClone(event.touches[0].clientX, event.touches[0].clientY);
+    });
+
+    el.addEventListener('touchmove', (event) => {
+      if (!activeClone) return;
+      event.preventDefault();
+      moveClone(event.touches[0].clientX, event.touches[0].clientY);
+    }, { passive: false });
+
+    el.addEventListener('touchend', () => {
+      if (!activeClone || !activeOriginal) return;
+
+      const cloneRect = activeClone.getBoundingClientRect();
+      let dropped = false;
+
+      // Loop through all drop zones to check drop validity
+      dropZones.forEach((dropZone, index) => {
+        const dropZoneRect = dropZone.getBoundingClientRect();
+        const centerX = cloneRect.left + cloneRect.width / 2;
+        const centerY = cloneRect.top + cloneRect.height / 2;
+
+        // Check if the clone's center is inside the drop zone
+        const isInside =
+          centerX >= dropZoneRect.left &&
+          centerX <= dropZoneRect.right &&
+          centerY >= dropZoneRect.top &&
+          centerY <= dropZoneRect.bottom;
+
+        // Check if the drop zone already has an item
+        if (isInside && !dropZoneHasItem[index]) {
+          const id = activeOriginal.dataset.id;
+          if (!placedItems.includes(id)) {
+            placedItems.push(id);
+            const placed = activeOriginal.cloneNode(true);
+            placed.classList.remove('draggable');
+            dropZone.appendChild(placed);
+            dropped = true;
+            dropZoneHasItem[index] = true;
+          }
+        }
+      });
+
+      // Remove the clone regardless of drop success
+      document.body.removeChild(activeClone);
+      activeClone = null;
+      activeOriginal = null;
+
+      // If a valid drop occurred and we now have 3 items placed, check result
+      if (dropped) {
+        if (placedItems.length === 3) {
+          checkLightResult();
+        }
+      }
+    });
   });
 
-  el.addEventListener('dragend', e => {
-    e.target.style.visibility = 'visible';
-  });
-});
-
-// Handle drop into light-slots
-document.querySelectorAll('.light-slot').forEach(slot => {
-  slot.addEventListener('dragover', e => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
+  // Continue button navigates to Toybox-4
+  continueBtn.addEventListener('click', () => {
+    window.location.href = "../Toybox-4/index.html";
   });
 
-  slot.addEventListener('drop', e => {
-    e.preventDefault();
-    if (!dragged || slot.children.length > 0) return;
-
-    dragged.style.position = 'relative';
-    dragged.style.left = '0px';
-    dragged.style.top = '0px';
-    dragged.style.width = '80px';
-    dragged.style.zIndex = 1;
-    dragged.style.margin = 'auto';
-    dragged.setAttribute('draggable', 'false');
-
-    slot.appendChild(dragged);
-
-    const allFilled = Array.from(document.querySelectorAll('.light-slot')).every(slot => slot.children.length > 0);
-    if (allFilled) checkOrder();
-
-    dragged = null;
-  });
-});
-
-// Validate slot contents in correct left-to-right order
-function checkOrder() {
-  const gameAreaEl = document.getElementById('game-area');
-  const xpEl = document.getElementById('xp-value');
-
-  const slots = document.querySelectorAll('.light-slot');
-  const actualOrder = Array.from(slots).map(slot => {
-    const img = slot.querySelector('img');
-    return img ? img.id : null;
-  });
-
-  const isCorrect = actualOrder.every((id, i) => id === correctOrder[i]);
-
-  if (isCorrect && !taskComplete) {
-    taskComplete = true;
-    gameAreaEl.classList.add('complete');
-    gameAreaEl.style.borderColor = '#28a745';
-
-    if (!playerState.isCompleted("3")) {
-      let currentXP = playerState.getXP();
-      currentXP += 5;
-      playerState.setXP(currentXP);
-      playerState.markCompleted("3");
-      xpEl.textContent = currentXP;
-    
-      xpEl.classList.add('xp-flash');
-      setTimeout(() => xpEl.classList.remove('xp-flash'), 500);
-    }
-    
-
-    document.getElementById('completion-buttons').style.display = 'block';
-
-    setTimeout(() => {
-      alert('✅ You turned sunlight into light!');
-      gameAreaEl.classList.remove('complete');
-      gameAreaEl.style.borderColor = '#555';
-    }, 1000);
-  } else {
-    gameAreaEl.style.borderColor = '#b00020';
-
-    setTimeout(() => {
-      alert('❌ Incorrect sequence. Try again.');
-      gameAreaEl.style.borderColor = '#555';
-      resetSlots();
-    }, 1000);
+  // Helper function to move the clone element
+  function moveClone(x, y) {
+    activeClone.style.left = (x - offsetX) + 'px';
+    activeClone.style.top = (y - offsetY) + 'px';
   }
-}
 
-// Reset all slots for retry
-function resetSlots() {
-  document.querySelectorAll('.light-slot').forEach(slot => {
-    const item = slot.querySelector('img');
-    if (item) {
-      document.getElementById('toolbox').appendChild(item);
-      item.setAttribute('draggable', 'true');
-      item.style.position = 'static';
-      item.style.margin = '10px 0';
+  // Check if the placed items are correct
+  function checkLightResult() {
+    const isValid = correctItems.every(id => placedItems.includes(id));
+    const xpVal = document.getElementById('xp-value');
+
+    if (isValid) {
+      if (!playerState.isCompleted("3")) {
+        let xp = playerState.getXP();
+        playerState.setXP(xp + 5);
+        playerState.markCompleted("3");
+        playerState.save();
+      }
+      xpVal.textContent = playerState.getXP();
+      modalResultText.textContent = "✅ Crops successfully planted!";
+      resultModal.classList.remove('hidden'); // Show the modal
+    } else {
+      modalResultText.textContent = "❌ Something’s not right in the soil...";
+      resultModal.classList.remove('hidden'); // Show the modal
+
+      // Reset: clear all items from drop zones and reset placed items
+      placedItems = [];
+      dropZoneIndices.forEach(dropZoneIndex => {
+        const dropZone = document.querySelector(`.cell[data-index="${dropZoneIndex}"]`);
+        while (dropZone.firstChild) {
+          dropZone.removeChild(dropZone.firstChild);
+        }
+      });
+      dropZoneHasItem = [false, false, false];
     }
-  });
-}
-
-// Buttons
-document.getElementById('btn-continue').addEventListener('click', () => {
-  window.location.href = '../Toybox-4/index.html';
+  }
 });
 
-
-document.getElementById('btn-exit').addEventListener('click', () => {
-  console.log('Exit Toybox');
-});
 function goToMap() {
   window.location.href = "../ProgressMap/index.html"; // Adjust path if needed
 }

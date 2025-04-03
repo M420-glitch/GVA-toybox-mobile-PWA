@@ -114,9 +114,12 @@ h1 {
 }
 
 #toolbox img {
-  margin: 10px;
-  cursor: grab;
-  width: 80px;
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  border-radius: 6px;
+  z-index: 10;
+  touch-action: none;
 }
 
 .draggable {
@@ -200,8 +203,8 @@ h1 {
 
 #game-area {
   position: relative;
-  width: 600px;
-  height: 500px;
+  width: 324px; /* Set the width to 324px */
+  height: 324px; /* Set the height to 324px */
   margin: 0 auto;
   background: #d6faff;
   border: 2px dashed #555;
