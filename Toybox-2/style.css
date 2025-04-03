@@ -60,6 +60,22 @@ html, body {
   z-index: 1;
 }
 
+.cell[data-index="24"],
+.cell[data-index="25"],
+.cell[data-index="26"],
+.cell[data-index="27"],
+.cell[data-index="28"],
+.cell[data-index="29"],
+.cell[data-index="30"],
+.cell[data-index="31"],
+.cell[data-index="32"],
+.cell[data-index="33"],
+.cell[data-index="34"],
+.cell[data-index="35"] {
+  background: url('assets/grow/ground.png') no-repeat center;
+  background-size: cover;
+}
+
 /* Valid drop zones: add a soil background using your ground asset */
 .cell.drop-zone {
   background: url('assets/grow/ground.png') no-repeat center;
