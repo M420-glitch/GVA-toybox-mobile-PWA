@@ -2,15 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <!-- Lock viewport for mobile portrait, no scroll -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Toybox-3M – Light Game</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Basic modal styling */
+    .modal {
+      display: flex;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+      justify-content: center;
+      align-items: center;
+      z-index: 1000; /* Ensure it's on top */
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    /* Initially hide the game container */
+    #game-container {
+      display: none;
+    }
+
+    /* Class to hide elements */
+    .hidden {
+      display: none !important;
+    }
+  </style>
 </head>
 <body>
   <!-- Intro Modal -->
   <div id="intro-modal" class="modal">
     <div class="modal-content">
-      <h1>🌱 Light Toybox 3</h1>
+      <h1>🌱 Light Toybox 4</h1>
       <p>Generate light for the community.<br>Pick 3 essentials from the toolbox.<br>Not everything creates light.</p>
       <button id="start-button">Continue</button>
     </div>
@@ -23,28 +56,78 @@
   </div>
 
   <!-- XP counter -->
-  <div id="xp-counter">XP: <span id="xp-value">--</span></div>
+  <div id="xp-bar">XP: <span id="xp-value">--</span></div>
 
   <div id="game-container">
-    <div id="game-area">
-      <div id="light-dropzone">
-        <div class="light-slot" data-slot="1"></div>
-        <div class="arrow">➡️</div>
-        <div class="light-slot" data-slot="2"></div>
-        <div class="arrow">➡️</div>
-        <div class="light-slot" data-slot="3"></div>
-      </div>
-
-      <div id="ground-strip"></div>
+    <!-- The fixed 6x6 grid (324px x 324px) -->
+    <div id="grid-board">
+      <!-- Row 6 (top row): indices 0-5 -->
+      <div class="cell" data-index="0"></div>
+      <div class="cell" data-index="1"></div>
+      <div class="cell" data-index="2"></div>
+      <div class="cell" data-index="3"></div>
+      <div class="cell" data-index="4"></div>
+      <div class="cell" data-index="5"></div>
+      <!-- Row 5: indices 6-11 -->
+      <div class="cell" data-index="6"></div>
+      <div class="cell" data-index="7"></div>
+      <div class="cell" data-index="8"></div>
+      <div class="cell" data-index="9"></div>
+      <div class="cell" data-index="10"></div>
+      <div class="cell" data-index="11"></div>
+      <!-- Row 4: indices 12-17 -->
+      <div class="cell" data-index="12"></div>
+      <div class="cell" data-index="13"></div>
+      <div class="cell" data-index="14"></div>
+      <div class="cell" data-index="15"></div>
+      <div class="cell" data-index="16"></div>
+      <div class="cell" data-index="17"></div>
+      <!-- Row 3 (valid drop zones): indices 18-23 -->
+      <div class="cell" data-index="18"></div>
+      <div class="cell drop-zone" data-index="19"></div>  <!-- B3 -->
+      <div class="cell drop-zone" data-index="20"></div>  <!-- C3 -->
+      <div class="cell drop-zone" data-index="21"></div>  <!-- D3 -->
+      <div class="cell" data-index="22"></div>
+      <div class="cell" data-index="23"></div>
+      <!-- Row 2: indices 24-29 -->
+      <div class="cell" data-index="24"></div>
+      <div class="cell" data-index="25"></div>
+      <div class="cell" data-index="26"></div>
+      <div class="cell" data-index="27"></div>
+      <div class="cell" data-index="28"></div>
+      <div class="cell" data-index="29"></div>
+      <!-- Row 1 (bottom row): indices 30-35 -->
+      <div class="cell" data-index="30"></div>
+      <div class="cell" data-index="31"></div>
+      <div class="cell" data-index="32"></div>
+      <div class="cell" data-index="33"></div>
+      <div class="cell" data-index="34"></div>
+      <div class="cell" data-index="35"></div>
     </div>
 
+    <!-- Toolbox with assets; note that assets should be resized via CSS to 54x54 (or adjusted as per portrait/landscape rules) -->
     <div id="toolbox">
-      <p>Toolbox:</p>
-      <img id="sun" src="assets/light/sun.png" class="draggable" title="Sunlight" style="touch-action: none;" />
-      <img id="converter" src="assets/light/converter.png" class="draggable" title="Converter" style="touch-action: none;" />
-      <img id="light-bulb" src="assets/light/light-bulb.png" class="draggable" title="Light Bulb" style="touch-action: none;" />
-      <img id="pizza" src="assets/light/pizza.png" class="draggable" title="Pizza" style="touch-action: none;" />
-      <img id="cardboard-box" src="assets/light/cardboard-box.png" class="draggable" title="Cardboard Box" style="touch-action: none;" />
+      <img class="draggable" src="assets/light/sun.png" data-id="sun" title="Sunlight" />
+      <img class="draggable" src="assets/light/converter.png" data-id="converter" title="Converter" />
+      <img class="draggable" src="assets/light/light-bulb.png" data-id="light-bulb" title="Light Bulb" />
+      <img class="draggable" src="assets/light/pizza.png" data-id="pizza" title="Pizza" />
+      <img class="draggable" src="assets/light/cardboard-box.png" data-id="cardboard-box" title="Cardboard Box" />
+    </div>
+
+    <!-- Result area (initially hidden) -->
+    <div id="result-box" style="display:none;">
+      <h2 id="result-text"></h2>
+      <button id="btn-continue">Continue</button>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="result-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2 id="modal-result-text"></h2>
+        <button id="btn-try-again" class="fail-button">Try Again</button>
+        <button id="btn-return-map" class="fail-button">Return to Map</button>
+        <button id="btn-continue-3">Continue to Toybox 3</button>
+      </div>
     </div>
   </div>
 
@@ -57,10 +140,14 @@
   <script src="../playerState.js"></script>
   <script src="game.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('start-button').addEventListener('click', () => {
-        document.getElementById('intro-modal').classList.add('hidden');
-        document.getElementById('game-container').classList.remove('hidden');
+    document.addEventListener('DOMContentLoaded', function() {
+      const startButton = document.getElementById('start-button');
+      const introModal = document.getElementById('intro-modal');
+      const gameContainer = document.getElementById('game-container');
+
+      startButton.addEventListener('click', function() {
+        introModal.classList.add('hidden'); // Hide the modal
+        gameContainer.style.display = 'block'; // Show the game container
       });
     });
   </script>
