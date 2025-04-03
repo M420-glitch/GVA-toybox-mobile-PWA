@@ -55,17 +55,9 @@ html, body {
   width: 54px;
   height: 54px;
   background-color: #eaffea;
-  /* border: 1px dashed #888; */ /* Remove individual cell borders */
+  border: 1px dashed #888;
   position: relative;
   z-index: 1;
-}
-
-.drop-zone-container {
-  width: 108px;
-  height: 108px;
-  border: 2px solid #6b4;
-  display: flex;
-  flex-wrap: wrap;
 }
 
 .cell[data-index="24"],
