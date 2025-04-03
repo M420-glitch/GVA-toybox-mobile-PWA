@@ -62,6 +62,8 @@ body {
   border: 1px dashed #888;
   position: relative;
   z-index: 1;
+  text-align: center; /* Center the "DROP" text */
+  line-height: 54px; /* Vertically center the "DROP" text */
 }
 
 .cell[data-index="24"],

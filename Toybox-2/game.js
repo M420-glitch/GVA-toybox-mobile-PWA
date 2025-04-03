@@ -23,8 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
   let offsetY = 0;
   let placedItems = [];
 
-  // Track which drop zone group has an item
-  const dropZoneHasItem = [false, false, false];
+  // Track if a drop zone has an item
+  let dropZoneHasItem = [false, false, false];
+
+  // Get the indices of the drop zones
+  const dropZoneIndices = [19, 20, 21];
 
   // Touch event listeners for each draggable
   draggables.forEach(el => {
@@ -54,7 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
       let dropped = false;
 
       // Loop through all drop zones to check drop validity
-      dropZones.forEach(dropZone => {
+      dropZoneIndices.forEach((dropZoneIndex, index) => {
+        const dropZone = document.querySelector(`.cell[data-index="${dropZoneIndex}"]`);
         const dropZoneRect = dropZone.getBoundingClientRect();
         const centerX = cloneRect.left + cloneRect.width / 2;
         const centerY = cloneRect.top + cloneRect.height / 2;
@@ -66,11 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
           centerY >= dropZoneRect.top &&
           centerY <= dropZoneRect.bottom;
 
-        // Get the drop zone group
-        const dropZoneGroup = parseInt(dropZone.dataset.group);
-
-        // Accept drop only if drop zone is empty
-        if (isInside && !dropZoneHasItem[dropZoneGroup - 1]) {
+        // Check if the drop zone already has an item
+        if (isInside && !dropZoneHasItem[index]) {
           const id = activeOriginal.dataset.id;
           if (!placedItems.includes(id)) {
             placedItems.push(id);
@@ -78,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
             placed.classList.remove('draggable');
             dropZone.appendChild(placed);
             dropped = true;
-            dropZoneHasItem[dropZoneGroup - 1] = true; // Mark drop zone as having an item
+            dropZoneHasItem[index] = true;
           }
         }
       });
@@ -127,12 +128,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Reset: clear all items from drop zones and reset placed items
       placedItems = [];
-      dropZones.forEach(dropZone => {
+      dropZoneIndices.forEach(dropZoneIndex => {
+        const dropZone = document.querySelector(`.cell[data-index="${dropZoneIndex}"]`);
         while (dropZone.firstChild) {
           dropZone.removeChild(dropZone.firstChild);
         }
       });
-      dropZoneHasItem.fill(false); // Reset drop zone item status
+      dropZoneHasItem = [false, false, false];
     }
   }
 
@@ -141,12 +143,13 @@ document.addEventListener('DOMContentLoaded', () => {
     resultModal.classList.add('hidden'); // Hide the modal
     // Reset the game state (clear placed items, etc.)
     placedItems = [];
-    dropZones.forEach(dropZone => {
+    dropZoneIndices.forEach(dropZoneIndex => {
+      const dropZone = document.querySelector(`.cell[data-index="${dropZoneIndex}"]`);
       while (dropZone.firstChild) {
         dropZone.removeChild(dropZone.firstChild);
       }
     });
-    dropZoneHasItem.fill(false); // Reset drop zone item status
+    dropZoneHasItem = [false, false, false];
   });
 
   continue3Btn.addEventListener('click', () => {
