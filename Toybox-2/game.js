@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Correct items that must be placed (from desktop: seed, water-can, sun)
   const correctItems = ['seed', 'water-can', 'sun'];
 
-  // Query draggable elements and grid cells (only drop zones are valid)
+  // Query draggable elements and drop zone containers
   const draggables = document.querySelectorAll('.draggable');
-  const cells = document.querySelectorAll('.cell');
+  const dropZoneContainers = document.querySelectorAll('.drop-zone-container');
   const resultBox = document.getElementById('result-box');
   const resultText = document.getElementById('result-text');
   const continueBtn = document.getElementById('btn-continue');
@@ -46,27 +46,27 @@ document.addEventListener('DOMContentLoaded', () => {
       const cloneRect = activeClone.getBoundingClientRect();
       let dropped = false;
 
-      // Loop through all cells to check drop validity
-      cells.forEach(cell => {
-        const cellRect = cell.getBoundingClientRect();
+      // Loop through all drop zone containers to check drop validity
+      dropZoneContainers.forEach(container => {
+        const containerRect = container.getBoundingClientRect();
         const centerX = cloneRect.left + cloneRect.width / 2;
         const centerY = cloneRect.top + cloneRect.height / 2;
 
-        // Check if the clone's center is inside the cell
+        // Check if the clone's center is inside the container
         const isInside =
-          centerX >= cellRect.left &&
-          centerX <= cellRect.right &&
-          centerY >= cellRect.top &&
-          centerY <= cellRect.bottom;
+          centerX >= containerRect.left &&
+          centerX <= containerRect.right &&
+          centerY >= containerRect.top &&
+          centerY <= containerRect.bottom;
 
-        // Accept drop only if cell is a valid drop zone and empty
-        if (isInside && cell.classList.contains('drop-zone') && cell.children.length === 0) {
+        // Accept drop only if container is empty
+        if (isInside && container.children.length === 0) {
           const id = activeOriginal.dataset.id;
           if (!placedItems.includes(id)) {
             placedItems.push(id);
             const placed = activeOriginal.cloneNode(true);
             placed.classList.remove('draggable');
-            cell.appendChild(placed);
+            container.appendChild(placed);
             dropped = true;
           }
         }
@@ -116,12 +116,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Reset: clear all items from drop zones and reset placed items
       placedItems = [];
-      cells.forEach(cell => {
-        if (cell.classList.contains('drop-zone')) {
-          while (cell.firstChild) {
-            cell.removeChild(cell.firstChild);
+      dropZoneContainers.forEach(container => {
+          while (container.firstChild) {
+            container.removeChild(container.firstChild);
           }
-        }
       });
     }
   }

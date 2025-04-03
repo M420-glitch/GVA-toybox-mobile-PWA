@@ -55,7 +55,6 @@
   <div id="game-container">
     <!-- The fixed 6x6 grid (324px x 324px) -->
     <div id="grid-board">
-      <!-- Generate 36 cells; mark valid drop zones (row 3, indices 18-23) with extra class "drop-zone" -->
       <!-- Row 6 (top row): indices 0-5 -->
       <div class="cell" data-index="0"></div>
       <div class="cell" data-index="1"></div>
@@ -70,20 +69,25 @@
       <div class="cell" data-index="9"></div>
       <div class="cell" data-index="10"></div>
       <div class="cell" data-index="11"></div>
-      <!-- Row 4: indices 12-17 -->
-      <div class="cell" data-index="12"></div>
-      <div class="cell" data-index="13"></div>
-      <div class="cell" data-index="14"></div>
-      <div class="cell" data-index="15"></div>
-      <div class="cell" data-index="16"></div>
-      <div class="cell" data-index="17"></div>
-      <!-- Row 3 (valid drop zones): indices 18-23 -->
-      <div class="cell drop-zone" data-index="18"></div>  <!-- A3 -->
-      <div class="cell drop-zone" data-index="19"></div>  <!-- B3 -->
-      <div class="cell drop-zone" data-index="20"></div>  <!-- C3 -->
-      <div class="cell drop-zone" data-index="21"></div>  <!-- D3 -->
-      <div class="cell drop-zone" data-index="22"></div>  <!-- E3 -->
-      <div class="cell drop-zone" data-index="23"></div>  <!-- F3 -->
+      <!-- Three big drop zones -->
+      <div class="drop-zone-container">
+        <div class="cell drop-zone" data-index="12"></div>
+        <div class="cell drop-zone" data-index="13"></div>
+        <div class="cell drop-zone" data-index="14"></div>
+        <div class="cell drop-zone" data-index="15"></div>
+      </div>
+      <div class="drop-zone-container">
+        <div class="cell drop-zone" data-index="16"></div>
+        <div class="cell drop-zone" data-index="17"></div>
+        <div class="cell drop-zone" data-index="18"></div>
+        <div class="cell drop-zone" data-index="19"></div>
+      </div>
+      <div class="drop-zone-container">
+        <div class="cell drop-zone" data-index="20"></div>
+        <div class="cell drop-zone" data-index="21"></div>
+        <div class="cell drop-zone" data-index="22"></div>
+        <div class="cell drop-zone" data-index="23"></div>
+      </div>
       <!-- Row 2: indices 24-29 -->
       <div class="cell" data-index="24"></div>
       <div class="cell" data-index="25"></div>

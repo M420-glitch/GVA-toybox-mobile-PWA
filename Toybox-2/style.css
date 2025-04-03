@@ -6,20 +6,13 @@
 }
 
 /* Fullscreen locked viewport for mobile portrait */
-html {
-  height: 100dvh;
-}
-
-body {
-  /* overflow: hidden; */ /* Remove overflow hidden */
+html, body {
+  overflow: hidden;
   width: 100vw;
   height: 100dvh;
   background-color: #f0f0f0;
   font-family: sans-serif;
   touch-action: none;
-  display: flex; /* Add flexbox */
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
 }
 
 /* XP counter styling */
@@ -37,14 +30,13 @@ body {
 
 /* Game container */
 #game-container {
-  /* width: 100%; */ /* Remove width 100% */
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   padding-top: 40px;
-  margin: 0 auto; /* Add margin: 0 auto */
 }
 
 /* 6x6 Grid board: fixed size 324px x 324px */
@@ -63,9 +55,17 @@ body {
   width: 54px;
   height: 54px;
   background-color: #eaffea;
-  border: 1px dashed #888;
+  /* border: 1px dashed #888; */ /* Remove individual cell borders */
   position: relative;
   z-index: 1;
+}
+
+.drop-zone-container {
+  width: 108px;
+  height: 108px;
+  border: 2px solid #6b4;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .cell[data-index="24"],
@@ -99,7 +99,7 @@ body {
   padding: 8px;
 }
 
-/* Draggable assets: force them to 54x54; object-fit: contain images */
+/* Draggable assets: force them to 54x54; object-fit to contain images */
 .draggable {
   width: 54px;
   height: 54px;
