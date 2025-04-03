@@ -1,19 +1,27 @@
+function isPWA() {
+  return window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true; // For iOS
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // Load player XP/state
   playerState.load();
   document.getElementById('xp-value').textContent = playerState.getXP();
 
-  // Correct items that must be placed (from desktop: sun, converter, light-bulb)
+  // Correct items that must be placed (from desktop: seed, water-can, sun)
   const correctItems = ['sun', 'converter', 'light-bulb'];
 
   // Query draggable elements and drop zone containers
   const draggables = document.querySelectorAll('.draggable');
-  const dropZones = document.querySelectorAll('.light-slot');
+  const dropZones = document.querySelectorAll('.cell.drop-zone');
   const resultBox = document.getElementById('result-box');
   const resultText = document.getElementById('result-text');
   const continueBtn = document.getElementById('btn-continue');
   const resultModal = document.getElementById('result-modal');
   const modalResultText = document.getElementById('modal-result-text');
+  const tryAgainBtn = document.getElementById('btn-try-again');
+  const continue3Btn = document.getElementById('btn-continue-3');
+  const returnMapBtn = document.getElementById('btn-return-map');
 
   let activeClone = null;
   let activeOriginal = null;
@@ -55,7 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
       let dropped = false;
 
       // Loop through all drop zones to check drop validity
-      dropZones.forEach((dropZone, index) => {
+      dropZoneIndices.forEach((dropZoneIndex, index) => {
+        const dropZone = document.querySelector(`.cell[data-index="${dropZoneIndex}"]`);
         const dropZoneRect = dropZone.getBoundingClientRect();
         const centerX = cloneRect.left + cloneRect.width / 2;
         const centerY = cloneRect.top + cloneRect.height / 2;
@@ -89,15 +98,15 @@ document.addEventListener('DOMContentLoaded', () => {
       // If a valid drop occurred and we now have 3 items placed, check result
       if (dropped) {
         if (placedItems.length === 3) {
-          checkLightResult();
+          checkGrowResult();
         }
       }
     });
   });
 
-  // Continue button navigates to Toybox-4
+  // Continue button navigates to Toybox-3
   continueBtn.addEventListener('click', () => {
-    window.location.href = "../Toybox-4/index.html";
+    window.location.href = "../Toybox-3/index.html";
   });
 
   // Helper function to move the clone element
@@ -107,23 +116,29 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Check if the placed items are correct
-  function checkLightResult() {
+  function checkGrowResult() {
     const isValid = correctItems.every(id => placedItems.includes(id));
     const xpVal = document.getElementById('xp-value');
 
     if (isValid) {
-      if (!playerState.isCompleted("3")) {
+      if (!playerState.isCompleted("2")) {
         let xp = playerState.getXP();
         playerState.setXP(xp + 5);
-        playerState.markCompleted("3");
+        playerState.markCompleted("2");
         playerState.save();
       }
       xpVal.textContent = playerState.getXP();
       modalResultText.textContent = "✅ Crops successfully planted!";
       resultModal.classList.remove('hidden'); // Show the modal
+      // Hide the "Return to Map" button on success
+      returnMapBtn.style.display = 'none';
+      continue3Btn.style.display = 'inline-block';
     } else {
       modalResultText.textContent = "❌ Something’s not right in the soil...";
       resultModal.classList.remove('hidden'); // Show the modal
+      // Show the "Return to Map" button on fail
+      returnMapBtn.style.display = 'inline-block';
+      continue3Btn.style.display = 'none';
 
       // Reset: clear all items from drop zones and reset placed items
       placedItems = [];
@@ -135,6 +150,34 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       dropZoneHasItem = [false, false, false];
     }
+  }
+
+  // Event listeners for modal buttons
+  tryAgainBtn.addEventListener('click', () => {
+    resultModal.classList.add('hidden'); // Hide the modal
+    // Reset the game state (clear placed items, etc.)
+    placedItems = [];
+    dropZoneIndices.forEach(dropZoneIndex => {
+      const dropZone = document.querySelector(`.cell[data-index="${dropZoneIndex}"]`);
+      while (dropZone.firstChild) {
+        dropZone.removeChild(dropZone.firstChild);
+      }
+    });
+    dropZoneHasItem = [false, false, false];
+  });
+
+  continue3Btn.addEventListener('click', () => {
+    window.location.href = "../Toybox-3/index.html";
+  });
+
+  // Add event listener for the "Return to Map" button
+  returnMapBtn.addEventListener('click', () => {
+    window.location.href = "../map/index.html"; // Link to the progress map
+  });
+
+  if (isPWA()) {
+    // Add a class to the body if it's a PWA
+    document.body.classList.add('pwa-mode');
   }
 });
 
