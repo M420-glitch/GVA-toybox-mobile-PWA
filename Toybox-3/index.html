@@ -43,10 +43,16 @@
   <!-- Intro Modal -->
   <div id="intro-modal" class="modal">
     <div class="modal-content">
-      <h1>🌱 Light Toybox 6</h1>
+      <h1>🌱 Light Toybox 5</h1>
       <p>Generate light for the community.<br>Pick 3 essentials from the toolbox.<br>Not everything creates light.</p>
       <button id="start-button">Continue</button>
     </div>
+  </div>
+
+  <!-- Top-left controls -->
+  <div id="top-left-controls">
+    <button onclick="goToMap()">🗺️ Progress Map</button>
+    <button onclick="saveAndExit()">💾 Save & Exit</button>
   </div>
 
   <!-- XP counter -->
@@ -99,6 +105,15 @@
       <div class="cell" data-index="35"></div>
     </div>
 
+    <!-- Toolbox with assets; note that assets should be resized via CSS to 54x54 (or adjusted as per portrait/landscape rules) -->
+    <div style="display: flex; justify-content: center; gap: 6px; max-width: 324px; padding: 8px; margin: 0 auto;">
+      <img class="draggable" src="assets/light/sun.png" data-id="sun" title="Sunlight" />
+      <img class="draggable" src="assets/light/converter.png" data-id="converter" title="Converter" />
+      <img class="draggable" src="assets/light/light-bulb.png" data-id="light-bulb" title="Light Bulb" />
+      <img class="draggable" src="assets/light/pizza.png" data-id="pizza" title="Pizza" />
+      <img class="draggable" src="assets/light/cardboard-box.png" data-id="cardboard-box" title="Cardboard Box" />
+    </div>
+
     <!-- Result area (initially hidden) -->
     <div id="result-box" style="display:none;">
       <h2 id="result-text"></h2>
@@ -116,13 +131,9 @@
     </div>
   </div>
 
-  <!-- Toolbox with assets; note that assets should be resized via CSS to 54x54 (or adjusted as per portrait/landscape rules) -->
-  <div style="display: flex; justify-content: center; gap: 6px; max-width: 324px; padding: 8px; margin: 0 auto;">
-    <img class="draggable" src="assets/light/sun.png" data-id="sun" title="Sunlight" />
-    <img class="draggable" src="assets/light/converter.png" data-id="converter" title="Converter" />
-    <img class="draggable" src="assets/light/light-bulb.png" data-id="light-bulb" title="Light Bulb" />
-    <img class="draggable" src="assets/light/pizza.png" data-id="pizza" title="Pizza" />
-    <img class="draggable" src="assets/light/cardboard-box.png" data-id="cardboard-box" title="Cardboard Box" />
+  <div id="completion-buttons" style="display: none;">
+    <button id="btn-continue">Continue</button>
+    <button id="btn-exit">Exit</button>
   </div>
 
   <!-- Include player state and game logic -->
