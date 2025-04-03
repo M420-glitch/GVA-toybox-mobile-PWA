@@ -100,10 +100,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 dropZoneHasItem[index] = true;
             } else {
                 // Incorrect item for this drop zone
-                modalResultText.textContent = "❌ Wrong item for this slot!";
-                resultModal.classList.remove('hidden');
-                resetGame();
-                return; // Exit the function early
+                // modalResultText.textContent = "❌ Wrong item for this slot!";
+                // resultModal.classList.remove('hidden');
+                // resetGame();
+                // return; // Exit the function early
             }
         }
       });
