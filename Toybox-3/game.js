@@ -83,15 +83,15 @@ document.addEventListener('DOMContentLoaded', () => {
           centerY >= dropZoneRect.top &&
           centerY <= dropZoneRect.bottom;
 
-        // Check if the drop zone already has an item
+        // Check if the drop zone is empty
         if (isInside && !dropZoneHasItem[index]) {
           const itemId = activeOriginal.dataset.id;
-          placedItems.push(itemId);
           const placed = activeOriginal.cloneNode(true);
           placed.classList.remove('draggable');
           dropZone.appendChild(placed);
           dropped = true;
           dropZoneHasItem[index] = true;
+          placedItems.push({ dropZoneIndex: dropZoneIndex, itemId: itemId }); // Store the placed item
         }
       });
 
@@ -122,11 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Check if the placed items are correct
   function checkGrowResult() {
-    const isValid = correctItems.every((itemId, index) => {
-      const dropZoneIndex = dropZoneIndices[index];
-      const dropZone = document.querySelector(`.cell[data-index="${dropZoneIndex}"]`);
-      const placedItemId = dropZone.querySelector('.draggable')?.dataset?.id;
-      return placedItemId === itemId;
+    const isValid = correctItems.every((itemId) => {
+      return placedItems.some(placedItem => placedItem.itemId === itemId);
     });
 
     const xpVal = document.getElementById('xp-value');
@@ -139,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playerState.save();
       }
       xpVal.textContent = playerState.getXP();
-      modalResultText.textContent = "✅ You turned sunlight into light!";
+      modalResultText.textContent = "✅ Light successfully generated!";
       resultModal.classList.remove('hidden'); // Show the modal
       // Hide the "Return to Map" button on success
       returnMapBtn.style.display = 'none';
