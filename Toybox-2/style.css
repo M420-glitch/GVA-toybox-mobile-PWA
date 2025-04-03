@@ -161,3 +161,19 @@ body {
   border-radius: 6px;
   cursor: pointer;
 }
+
+/* Style for modal buttons */
+.modal-content button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin: 5px;
+  background-color: #4CAF50; /* Green background */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-content button:hover {
+  background-color: #367c39; /* Darker green on hover */
+}

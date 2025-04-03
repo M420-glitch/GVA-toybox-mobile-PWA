@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalResultText = document.getElementById('modal-result-text');
   const tryAgainBtn = document.getElementById('btn-try-again');
   const continue3Btn = document.getElementById('btn-continue-3');
+  const returnMapBtn = document.getElementById('btn-return-map');
 
   let activeClone = null;
   let activeOriginal = null;
@@ -156,5 +157,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   continue3Btn.addEventListener('click', () => {
     window.location.href = "../Toybox-3/index.html";
+  });
+
+  // Add event listener for the "Return to Map" button
+  returnMapBtn.addEventListener('click', () => {
+    window.location.href = "../map/index.html"; // Link to the progress map
   });
 });
