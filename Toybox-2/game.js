@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Query draggable elements and drop zone containers
   const draggables = document.querySelectorAll('.draggable');
-  const dropZoneContainers = document.querySelectorAll('.drop-zone-container');
+  const dropZones = document.querySelectorAll('.cell.drop-zone');
   const resultBox = document.getElementById('result-box');
   const resultText = document.getElementById('result-text');
   const continueBtn = document.getElementById('btn-continue');
@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let offsetY = 0;
   let placedItems = [];
 
-  // Track which container has an item
-  const containerHasItem = [false, false, false];
+  // Track which drop zone group has an item
+  const dropZoneHasItem = [false, false, false];
 
   // Touch event listeners for each draggable
   draggables.forEach(el => {
@@ -53,29 +53,32 @@ document.addEventListener('DOMContentLoaded', () => {
       const cloneRect = activeClone.getBoundingClientRect();
       let dropped = false;
 
-      // Loop through all drop zone containers to check drop validity
-      dropZoneContainers.forEach((container, index) => {
-        const containerRect = container.getBoundingClientRect();
+      // Loop through all drop zones to check drop validity
+      dropZones.forEach(dropZone => {
+        const dropZoneRect = dropZone.getBoundingClientRect();
         const centerX = cloneRect.left + cloneRect.width / 2;
         const centerY = cloneRect.top + cloneRect.height / 2;
 
-        // Check if the clone's center is inside the container
+        // Check if the clone's center is inside the drop zone
         const isInside =
-          centerX >= containerRect.left &&
-          centerX <= containerRect.right &&
-          centerY >= containerRect.top &&
-          centerY <= containerRect.bottom;
+          centerX >= dropZoneRect.left &&
+          centerX <= dropZoneRect.right &&
+          centerY >= dropZoneRect.top &&
+          centerY <= dropZoneRect.bottom;
 
-        // Accept drop only if container is empty
-        if (isInside && !containerHasItem[index]) {
+        // Get the drop zone group
+        const dropZoneGroup = parseInt(dropZone.dataset.group);
+
+        // Accept drop only if drop zone is empty
+        if (isInside && !dropZoneHasItem[dropZoneGroup - 1]) {
           const id = activeOriginal.dataset.id;
           if (!placedItems.includes(id)) {
             placedItems.push(id);
             const placed = activeOriginal.cloneNode(true);
             placed.classList.remove('draggable');
-            container.appendChild(placed);
+            dropZone.appendChild(placed);
             dropped = true;
-            containerHasItem[index] = true; // Mark container as having an item
+            dropZoneHasItem[dropZoneGroup - 1] = true; // Mark drop zone as having an item
           }
         }
       });
@@ -124,12 +127,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Reset: clear all items from drop zones and reset placed items
       placedItems = [];
-      dropZoneContainers.forEach((container, index) => {
-        while (container.firstChild) {
-          container.removeChild(container.firstChild);
+      dropZones.forEach(dropZone => {
+        while (dropZone.firstChild) {
+          dropZone.removeChild(dropZone.firstChild);
         }
-        containerHasItem[index] = false; // Reset container item status
       });
+      dropZoneHasItem.fill(false); // Reset drop zone item status
     }
   }
 
@@ -138,12 +141,12 @@ document.addEventListener('DOMContentLoaded', () => {
     resultModal.classList.add('hidden'); // Hide the modal
     // Reset the game state (clear placed items, etc.)
     placedItems = [];
-    dropZoneContainers.forEach((container, index) => {
-      while (container.firstChild) {
-        container.removeChild(container.firstChild);
+    dropZones.forEach(dropZone => {
+      while (dropZone.firstChild) {
+        dropZone.removeChild(dropZone.firstChild);
       }
-      containerHasItem[index] = false; // Reset container item status
     });
+    dropZoneHasItem.fill(false); // Reset drop zone item status
   });
 
   continue3Btn.addEventListener('click', () => {

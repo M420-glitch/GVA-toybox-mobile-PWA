@@ -16,6 +16,7 @@ body {
   touch-action: none;
   display: flex; /* Add flexbox */
   justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
 }
 
 /* XP counter styling */
@@ -38,8 +39,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding-top: 40px;
+  justify-content: flex-start; /* Align items to the top */
+  padding-top: 40px; /* Add padding to the top */
 }
 
 /* 6x6 Grid board: fixed size 324px x 324px */
@@ -81,20 +82,11 @@ body {
 
 /* Valid drop zones: add a soil background using your ground asset */
 .cell.drop-zone {
-  /* border: 2px solid #6b4;  Remove border from individual cells */
-}
-
-.drop-zone-container {
-  width: 108px; /* Two columns */
-  height: 54px;
-  border: 2px solid #6b4;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  border: 2px solid #6b4; /* Highlight drop zones */
 }
 
 /* Style for images *within* the drop zones */
-.drop-zone-container img {
+.cell.drop-zone img {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -108,6 +100,7 @@ body {
   gap: 6px;
   max-width: 324px;
   padding: 8px;
+  margin: 0 auto; /* Center the toolbox horizontally */
 }
 
 /* Draggable assets: force them to 54x54; object-fit to contain images */
