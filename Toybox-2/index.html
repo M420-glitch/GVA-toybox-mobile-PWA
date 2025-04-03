@@ -2,80 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <!-- Lock viewport for mobile portrait, no scroll -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Toybox-2M – Ground Game</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- XP counter -->
+  <!-- Intro Modal -->
+  <div id="intro-modal" class="modal">
+    <div class="modal-content">
+      <h1>🌱 Ground Toybox</h1>
+      <p>Grow crops for the community.<br>Pick 3 essentials from the toolbox.<br>Not everything belongs in the soil.</p>
+      <button id="start-button">Continue</button>
+    </div>
+  </div>
+
+  <!-- XP Counter -->
   <div id="xp-bar">XP: <span id="xp-value">--</span></div>
 
-  <div id="game-container">
-    <!-- The fixed 6x6 grid (324px x 324px) -->
+  <!-- Game Area -->
+  <div id="game-container" class="hidden">
     <div id="grid-board">
-      <!-- Generate 36 cells; mark valid drop zones (row 3, indices 18-23) with extra class "drop-zone" -->
-      <!-- Row 6 (top row): indices 0-5 -->
-      <div class="cell" data-index="0"></div>
-      <div class="cell" data-index="1"></div>
-      <div class="cell" data-index="2"></div>
-      <div class="cell" data-index="3"></div>
-      <div class="cell" data-index="4"></div>
-      <div class="cell" data-index="5"></div>
-      <!-- Row 5: indices 6-11 -->
-      <div class="cell" data-index="6"></div>
-      <div class="cell" data-index="7"></div>
-      <div class="cell" data-index="8"></div>
-      <div class="cell" data-index="9"></div>
-      <div class="cell" data-index="10"></div>
-      <div class="cell" data-index="11"></div>
-      <!-- Row 4: indices 12-17 -->
-      <div class="cell" data-index="12"></div>
-      <div class="cell" data-index="13"></div>
-      <div class="cell" data-index="14"></div>
-      <div class="cell" data-index="15"></div>
-      <div class="cell" data-index="16"></div>
-      <div class="cell" data-index="17"></div>
-      <!-- Row 3 (valid drop zones): indices 18-23 -->
-      <div class="cell drop-zone" data-index="18"></div>  <!-- A3 -->
-      <div class="cell drop-zone" data-index="19"></div>  <!-- B3 -->
-      <div class="cell drop-zone" data-index="20"></div>  <!-- C3 -->
-      <div class="cell drop-zone" data-index="21"></div>  <!-- D3 -->
-      <div class="cell drop-zone" data-index="22"></div>  <!-- E3 -->
-      <div class="cell drop-zone" data-index="23"></div>  <!-- F3 -->
-      <!-- Row 2: indices 24-29 -->
-      <div class="cell" data-index="24"></div>
-      <div class="cell" data-index="25"></div>
-      <div class="cell" data-index="26"></div>
-      <div class="cell" data-index="27"></div>
-      <div class="cell" data-index="28"></div>
-      <div class="cell" data-index="29"></div>
-      <!-- Row 1 (bottom row): indices 30-35 -->
-      <div class="cell" data-index="30"></div>
-      <div class="cell" data-index="31"></div>
-      <div class="cell" data-index="32"></div>
-      <div class="cell" data-index="33"></div>
-      <div class="cell" data-index="34"></div>
-      <div class="cell" data-index="35"></div>
+      <!-- 6x6 = 36 cells -->
+      <!-- Generated in JS or manually listed if needed -->
+      <!-- Will apply ground background via CSS to A1–F2 (cells 30–35 and 24–29) -->
+
+      <!-- Row 6 to Row 1 -->
+      ${[...Array(36).keys()].map(i => `<div class="cell" data-index="${i}"></div>`).join('')}
     </div>
 
-    <!-- Toolbox with assets; note that assets should be resized via CSS to 54x54 (or adjusted as per portrait/landscape rules) -->
+    <!-- Drop Zone Guides -->
+    <div class="drop-guide" id="dropzone1"></div>
+    <div class="drop-guide" id="dropzone2"></div>
+    <div class="drop-guide" id="dropzone3"></div>
+
+    <!-- Toolbox -->
     <div id="toolbox">
-      <img class="draggable" src="assets/grow/seed.png" data-id="seed" title="Seed" />
-      <img class="draggable" src="assets/grow/water-can.png" data-id="water-can" title="Watering Can" />
-      <img class="draggable" src="assets/grow/sun.png" data-id="sun" title="Sunlight" />
-      <img class="draggable" src="assets/grow/cola.png" data-id="cola" title="Can of Cola" />
-      <img class="draggable" src="assets/grow/flatscreen.png" data-id="flatscreen" title="Flat Screen TV" />
+      <img class="draggable" src="assets/grow/seed.png" data-id="seed" />
+      <img class="draggable" src="assets/grow/water-can.png" data-id="water-can" />
+      <img class="draggable" src="assets/grow/sun.png" data-id="sun" />
+      <img class="draggable" src="assets/grow/cola.png" data-id="cola" />
+      <img class="draggable" src="assets/grow/flatscreen.png" data-id="flatscreen" />
     </div>
 
-    <!-- Result area (initially hidden) -->
+    <!-- Result -->
     <div id="result-box" style="display:none;">
       <h2 id="result-text"></h2>
       <button id="btn-continue">Continue</button>
     </div>
   </div>
 
-  <!-- Include player state and game logic -->
   <script src="../playerState.js"></script>
   <script src="game.js"></script>
 </body>
