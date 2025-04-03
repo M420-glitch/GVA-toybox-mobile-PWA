@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let offsetY = 0;
   let placedItems = [];
 
+  // Track which container has an item
+  const containerHasItem = [false, false, false];
+
   // Touch event listeners for each draggable
   draggables.forEach(el => {
     el.addEventListener('touchstart', (event) => {
@@ -47,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let dropped = false;
 
       // Loop through all drop zone containers to check drop validity
-      dropZoneContainers.forEach(container => {
+      dropZoneContainers.forEach((container, index) => {
         const containerRect = container.getBoundingClientRect();
         const centerX = cloneRect.left + cloneRect.width / 2;
         const centerY = cloneRect.top + cloneRect.height / 2;
@@ -60,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
           centerY <= containerRect.bottom;
 
         // Accept drop only if container is empty
-        if (isInside && container.children.length === 0) {
+        if (isInside && !containerHasItem[index]) {
           const id = activeOriginal.dataset.id;
           if (!placedItems.includes(id)) {
             placedItems.push(id);
@@ -68,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
             placed.classList.remove('draggable');
             container.appendChild(placed);
             dropped = true;
+            containerHasItem[index] = true; // Mark container as having an item
           }
         }
       });
@@ -116,10 +120,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Reset: clear all items from drop zones and reset placed items
       placedItems = [];
-      dropZoneContainers.forEach(container => {
-          while (container.firstChild) {
-            container.removeChild(container.firstChild);
-          }
+      dropZoneContainers.forEach((container, index) => {
+        while (container.firstChild) {
+          container.removeChild(container.firstChild);
+        }
+        containerHasItem[index] = false; // Reset container item status
       });
     }
   }
