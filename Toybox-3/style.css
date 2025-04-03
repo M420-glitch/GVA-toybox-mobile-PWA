@@ -14,15 +14,15 @@ html, body {
 }
 
 body {
-  background: #f0f0f0;
-  font-family: monospace;
-  text-align: center;
-  margin: 0;
-  padding: 0;
+  background-color: #f0f0f0;
+  font-family: sans-serif;
+  touch-action: none;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   min-height: 100vh;
+  padding-top: 40px; /* This keeps the vertical height position */
 }
 
 h1 {
