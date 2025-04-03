@@ -90,8 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
       activeOriginal = null;
 
       // If a valid drop occurred and we now have 3 items placed, check result
-      if (dropped && placedItems.length === 3) {
-        checkGrowResult();
+      if (dropped) {
+        if (placedItems.length === 3) {
+          checkGrowResult();
+        }
       }
     });
   });
