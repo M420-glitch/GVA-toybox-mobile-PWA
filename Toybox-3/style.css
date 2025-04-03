@@ -98,7 +98,7 @@ h1 {
 .cell[data-index="33"],
 .cell[data-index="34"],
 .cell[data-index="35"] {
-  background: url('assets/grow/ground.png') no-repeat center;
+  background: url('assets/light/ground.png') no-repeat center;
   background-size: cover;
 }
 
