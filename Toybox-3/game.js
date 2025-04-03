@@ -144,20 +144,20 @@ document.addEventListener('DOMContentLoaded', () => {
       const xpVal = document.getElementById('xp-value');
 
       if (isValid) {
-          if (!playerState.isCompleted("2")) {
+          if (!playerState.isCompleted("3")) {
               let xp = playerState.getXP();
               playerState.setXP(xp + 5);
-              playerState.markCompleted("2");
+              playerState.markCompleted("3");
               playerState.save();
           }
           xpVal.textContent = playerState.getXP();
-          modalResultText.textContent = "✅ Crops successfully planted!";
+          modalResultText.textContent = "✅ You turned sunlight into light!";
           resultModal.classList.remove('hidden'); // Show the modal
           // Hide the "Return to Map" button on success
           returnMapBtn.style.display = 'none';
           continue3Btn.style.display = 'inline-block';
       } else {
-          modalResultText.textContent = "❌ Something’s not right in the soil...";
+          modalResultText.textContent = "❌ Incorrect sequence. Try again...";
           resultModal.classList.remove('hidden'); // Show the modal
           // Show the "Return to Map" button on fail
           returnMapBtn.style.display = 'inline-block';
@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   continue3Btn.addEventListener('click', () => {
-    window.location.href = "../Toybox-3/index.html";
+    window.location.href = "../Toybox-4/index.html";
   });
 
   // Add event listener for the "Return to Map" button
