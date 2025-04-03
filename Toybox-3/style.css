@@ -59,10 +59,9 @@ h1 {
   align-items: center; /* Center items horizontally */
   justify-content: flex-start; /* Align items to the top */
   padding-top: 40px;
-  gap: 20px;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 900px; /* added max-width */
+  margin-left: auto;  /* added margin-left */
+  margin-right: auto; /* added margin-right */
 }
 
 /* 6x6 Grid board: fixed size 324px x 324px */
