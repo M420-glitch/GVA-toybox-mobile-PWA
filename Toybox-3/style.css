@@ -69,11 +69,12 @@ h1 {
   position: relative;
 }
 
+/* Grid cells */
 .cell {
   width: 54px;
   height: 54px;
-  background-color: #fefefe;
-  border: 1px dashed #ccc;
+  background-color: #eaffea;
+  border: 1px dashed #888;
   position: relative;
   z-index: 1;
 }
